@@ -13,6 +13,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     /////////////////
 
     error InvalidTokenAddress();
+    error InvalidEthAmount();
 
     ////////////////////////
     /// State Variables ///
@@ -32,5 +33,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     constructor(address tokenAddress) Ownable(msg.sender) {
         if (tokenAddress == address(0)) revert InvalidTokenAddress();
         REWARD_TOKEN = RewardToken(tokenAddress);
+    }
+
+    ///////////////////
+    /// Functions /////
+    ///////////////////
+
+    function stake(uint256 amount) external whenNotPaused nonReentrant {
+        if (amount == 0) revert InvalidEthAmount();
     }
 }
