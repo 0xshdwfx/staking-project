@@ -30,6 +30,10 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     ///////////////////
     /// Constructor ///
     ///////////////////
+
+    /**
+     * @notice Constructor - Initialises the staking and reward tokens
+     */
     constructor(address tokenAddress) Ownable(msg.sender) {
         if (tokenAddress == address(0)) revert InvalidTokenAddress();
         REWARD_TOKEN = RewardToken(tokenAddress);
