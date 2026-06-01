@@ -18,6 +18,12 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     /// State Variables ///
     //////////////////////
 
+    struct UserInfo {
+        uint256 stakedAmount;
+        uint256 lastRewardTime;
+        uint256 pendingRewards;
+    }
+
     RewardToken public immutable REWARD_TOKEN;
 
     ///////////////////
