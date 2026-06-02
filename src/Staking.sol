@@ -38,7 +38,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         uint256 pendingRewards;
     }
 
-    IERC20 public immutable stakingToken;
+    IERC20 public immutable STAKING_TOKEN;
     RewardToken public immutable REWARD_TOKEN;
 
     uint256 public totalStaked;
@@ -60,7 +60,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         if (_stakingToken == address(0)) revert InvalidTokenAddress();
         if (_rewardToken == address(0)) revert InvalidTokenAddress();
 
-        stakingToken = IERC20(_stakingToken);
+        STAKING_TOKEN = IERC20(_stakingToken);
         REWARD_TOKEN = RewardToken(_rewardToken);
     }
 
@@ -70,5 +70,24 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
     function stake(uint256 amount) external whenNotPaused nonReentrant {
         if (amount == 0) revert InvalidStakeAmount();
+
+        UserInfo storage user = userInfo[msg.sender];
+
+        // calculate and store pending rewards if user already staking
+        if (user.stakedAmount > 0) {
+            user.pendingRewards += calculateReward(msg.sender);
+        }
+
+        // store time of latest reward
+        user.lastRewardTime = block.timestamp;
+
+        // transfer staking token
+        bool success = STAKING_TOKEN.transferFrom(msg.sender, address(this), amount);
+        if (!success) revert TransferFailed();
+
+        user.stakedAmount += amount;
+        totalStaked += amount;
     }
+
+    function calculateReward(address user) internal view returns (uint256) {}
 }
