@@ -25,7 +25,8 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     /////////////////
 
     error InvalidTokenAddress();
-    error InvalidEthAmount();
+    error InvalidStakeAmount();
+    error TransferFailed();
 
     ////////////////////////
     /// State Variables ///
@@ -37,21 +38,30 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         uint256 pendingRewards;
     }
 
+    IERC20 public immutable stakingToken;
     RewardToken public immutable REWARD_TOKEN;
+
+    uint256 public totalStaked;
+    mapping(address => UserInfo) public userInfo;
 
     ///////////////////
     /// Constructor ///
     ///////////////////
 
     /**
-     * @notice Initializes the Staking contract with a RewardToken reference.
-     * @param tokenAddress The address of the deployed RewardToken contract.
+     * @notice Initialises the Staking contract with staking and reward token references.
+     * @param _stakingToken The address of the ERC20 token used for staking.
+     * @param _rewardToken The address of the deployed RewardToken contract.
      * @dev Validates that tokenAddress is not zero. Initializes Ownable with msg.sender.
-     * @custom:error InvalidTokenAddress if tokenAddress is address(0).
+     *      Stores both token references as immutable for gas efficiency and security.
+     * @custom:error InvalidTokenAddress if either _stakingToken or _rewardToken is address(0).
      */
-    constructor(address tokenAddress) Ownable(msg.sender) {
-        if (tokenAddress == address(0)) revert InvalidTokenAddress();
-        REWARD_TOKEN = RewardToken(tokenAddress);
+    constructor(address _stakingToken, address _rewardToken) Ownable(msg.sender) {
+        if (_stakingToken == address(0)) revert InvalidTokenAddress();
+        if (_rewardToken == address(0)) revert InvalidTokenAddress();
+
+        stakingToken = IERC20(_stakingToken);
+        REWARD_TOKEN = RewardToken(_rewardToken);
     }
 
     ///////////////////
@@ -59,6 +69,6 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     ///////////////////
 
     function stake(uint256 amount) external whenNotPaused nonReentrant {
-        if (amount == 0) revert InvalidEthAmount();
+        if (amount == 0) revert InvalidStakeAmount();
     }
 }
