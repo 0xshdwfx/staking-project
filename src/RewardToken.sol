@@ -5,6 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract RewardToken is ERC20, Ownable {
+    //////////////////
+    /// Constants ////
+    //////////////////
+
     uint256 private constant INITIAL_MINT_VALUE = 1e6 * 1e18; // 1 million tokens with 18 decimals
 
     constructor() ERC20("Reward Token", "RWT") Ownable(msg.sender) {
