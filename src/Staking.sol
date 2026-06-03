@@ -90,7 +90,17 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         totalStaked += amount;
     }
 
-    function calculateReward(address user) internal view returns (uint256) {
-        if (user == address(0)) revert InvalidUserAddress();
+    function calculateReward(address _user) internal view returns (uint256) {
+        if (_user == address(0)) revert InvalidUserAddress();
+
+        UserInfo memory user = userInfo[_user];
+
+        // time elapsed since last reward calculation
+        uint256 timeElapsed = block.timestamp - user.lastRewardTime;
+
+        uint256 dailyRewardRate = 1e17; // 10% annual reward rate - 0.1 * 1e18 = 1e17
+        uint256 reward = (user.stakedAmount * timeElapsed * dailyRewardRate) / (365 * 1e18);
+
+        return reward;
     }
 }
