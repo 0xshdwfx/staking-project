@@ -78,10 +78,10 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
             user.pendingRewards += calculateReward(msg.sender);
         }
 
-        // store time of latest reward
+        // reset the time - start measuring rewards from now
         user.lastRewardTime = block.timestamp;
 
-        // transfer staking token
+        // transfer staking token from user to the contract
         bool success = STAKING_TOKEN.transferFrom(msg.sender, address(this), amount);
         if (!success) revert TransferFailed();
 
