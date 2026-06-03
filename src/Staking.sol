@@ -27,6 +27,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     error InvalidTokenAddress();
     error InvalidStakeAmount();
     error TransferFailed();
+    error InvalidUserAddress();
 
     ////////////////////////
     /// State Variables ///
@@ -89,5 +90,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         totalStaked += amount;
     }
 
-    function calculateReward(address user) internal view returns (uint256) {}
+    function calculateReward(address user) internal view returns (uint256) {
+        if (user == address(0)) revert InvalidUserAddress();
+    }
 }
