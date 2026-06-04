@@ -151,6 +151,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         emit Unstaked(msg.sender, amount);
     }
 
+    /**
+     * @notice Claim accrued rewards from staking.
+     * @dev Validates that pending rewards exist, mints reward tokens to the user,
+     *      clears pending rewards balance, and resets the reward calculation timer.
+     *      Protected by reentrancy guard and pausable modifier.
+     * @custom:error RewardAmountIsZero if pendingRewards == 0.
+     */
     function claimReward() external whenNotPaused nonReentrant {
         UserInfo storage user = userInfo[msg.sender];
 
