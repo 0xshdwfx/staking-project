@@ -25,6 +25,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     /////////////////
 
     event StakeAdded(address indexed user, uint256 amount);
+    event Unstaked(address indexed user, uint256 amount);
 
     /////////////////
     /// Errors //////
@@ -34,6 +35,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     error InvalidStakeAmount();
     error TransferFailed();
     error InvalidUserAddress();
+    error AmountToUnstakeExceedsStakedAmount();
 
     ////////////////////////
     /// State Variables ///
@@ -84,6 +86,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @custom:error TransferFailed if token transfer fails
      */
     function stake(uint256 amount) external whenNotPaused nonReentrant {
+        // validate to ensure amount to stake is not 0
         if (amount == 0) revert InvalidStakeAmount();
 
         UserInfo storage user = userInfo[msg.sender];
@@ -106,6 +109,35 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
         // emit event
         emit StakeAdded(msg.sender, amount);
+    }
+
+    function unstake(uint256 amount) external whenNotPaused nonReentrant {
+        // validate to ensure amount to unstake is not 0
+        if (amount == 0) revert InvalidStakeAmount();
+
+        UserInfo storage user = userInfo[msg.sender];
+
+        // validate to ensure user has enough staked before withdrawing
+        if (amount > user.stakedAmount) revert AmountToUnstakeExceedsStakedAmount();
+
+        // calculate and store pending rewards if user already staking
+        if (user.stakedAmount > 0) {
+            user.pendingRewards += calculateReward(msg.sender);
+        }
+
+        // reset time
+        user.lastRewardTime = block.timestamp;
+
+        // transfer users staked tokens from contract back to user
+        bool success = STAKING_TOKEN.transfer(msg.sender, amount);
+        if (!success) revert TransferFailed();
+
+        // update balances
+        user.stakedAmount -= amount;
+        totalStaked -= amount;
+
+        // emit event
+        emit Unstaked(msg.sender, amount);
     }
 
     function calculateReward(address _user) internal view returns (uint256) {
