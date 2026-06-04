@@ -158,7 +158,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      *      Protected by reentrancy guard and pausable modifier.
      * @custom:error RewardAmountIsZero if pendingRewards == 0.
      */
-    function claimReward() external whenNotPaused nonReentrant {
+    function claimReward() external nonReentrant {
         UserInfo storage user = userInfo[msg.sender];
 
         // validate to ensure reward amount is not 0
