@@ -26,7 +26,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
     event StakeAdded(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
-    event ClaimReward(address indexed user, uint256 amount);
+    event RewardClaimed(address indexed user, uint256 amount);
 
     /////////////////
     /// Errors //////
@@ -175,7 +175,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         user.lastRewardTime = block.timestamp;
 
         // emit event
-        emit ClaimReward(msg.sender, rewardAmount);
+        emit RewardClaimed(msg.sender, rewardAmount);
     }
 
     /**
