@@ -149,6 +149,14 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         emit Unstaked(msg.sender, amount);
     }
 
+    /**
+     * @notice Calculates accrued rewards for a user based on stake amount and time elapsed.
+     * @param _user The address of the user.
+     * @return Reward amount in wei earned since last calculation.
+     * @dev Uses 10% APY with formula: (stakedAmount × timeElapsed × rate) / (365 × 1e18).
+     *      Multiplies before dividing to preserve precision.
+     * @custom:error InvalidUserAddress if _user is address(0).
+     */
     function calculateReward(address _user) internal view returns (uint256) {
         if (_user == address(0)) revert InvalidUserAddress();
 
