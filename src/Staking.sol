@@ -21,6 +21,12 @@ import {RewardToken} from "src/RewardToken.sol";
 
 contract Staking is Ownable, ReentrancyGuard, Pausable {
     /////////////////
+    /// Events //////
+    /////////////////
+
+    event StakeAdded(address indexed user, uint256 amount);
+
+    /////////////////
     /// Errors //////
     /////////////////
 
@@ -94,8 +100,12 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         bool success = STAKING_TOKEN.transferFrom(msg.sender, address(this), amount);
         if (!success) revert TransferFailed();
 
+        // update balances
         user.stakedAmount += amount;
         totalStaked += amount;
+
+        // emit event
+        emit StakeAdded(msg.sender, amount);
     }
 
     function calculateReward(address _user) internal view returns (uint256) {
