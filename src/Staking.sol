@@ -111,6 +111,15 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         emit StakeAdded(msg.sender, amount);
     }
 
+    /**
+     * @notice Unstake tokens.
+     * @param amount Amount of staking tokens to unstake.
+     * @dev Calculates pending reward, removes stake, and updates balances.
+     *      Protected by reentrancy guard and pausable modifier.
+     * @custom:error InvalidStakeAmount if amount == 0.
+     * @custom:error AmountToUnstakeExceedsStakedAmount if unstake amount is greater than staked amount.
+     * @custom:error TransferFailed if token transfer fails.
+     */
     function unstake(uint256 amount) external whenNotPaused nonReentrant {
         // validate to ensure amount to unstake is not 0
         if (amount == 0) revert InvalidStakeAmount();
