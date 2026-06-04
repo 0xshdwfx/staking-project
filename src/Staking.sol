@@ -69,6 +69,14 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     /// Functions /////
     ///////////////////
 
+    /**
+     * @notice Stake tokens to earn rewards.
+     * @param amount Amount of staking tokens to deposit (in wei).
+     * @dev Calculates pending rewards, transfers tokens, and updates user balance.
+     *      Protected by reentrancy guard and pausable modifier.
+     * @custom:error InvalidStakeAmount if amount == 0
+     * @custom:error TransferFailed if token transfer fails
+     */
     function stake(uint256 amount) external whenNotPaused nonReentrant {
         if (amount == 0) revert InvalidStakeAmount();
 
