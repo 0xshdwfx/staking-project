@@ -26,6 +26,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
     event StakeAdded(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
+    event ClaimReward(address indexed user, uint256 amount);
 
     /////////////////
     /// Errors //////
@@ -36,6 +37,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     error TransferFailed();
     error InvalidUserAddress();
     error AmountToUnstakeExceedsStakedAmount();
+    error RewardAmountIsZero();
 
     ////////////////////////
     /// State Variables ///
@@ -147,6 +149,26 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
         // emit event
         emit Unstaked(msg.sender, amount);
+    }
+
+    function claimReward() external whenNotPaused nonReentrant {
+        UserInfo storage user = userInfo[msg.sender];
+
+        // validate to ensure reward amount is not 0
+        uint256 rewardAmount = user.pendingRewards;
+        if (rewardAmount == 0) revert RewardAmountIsZero();
+
+        // send reward to user
+        REWARD_TOKEN.mint(msg.sender, rewardAmount);
+
+        // clear pending rewards
+        user.pendingRewards = 0;
+
+        // reset time
+        user.lastRewardTime = block.timestamp;
+
+        // emit event
+        emit ClaimReward(msg.sender, rewardAmount);
     }
 
     /**
