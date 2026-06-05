@@ -178,6 +178,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         emit RewardClaimed(msg.sender, rewardAmount);
     }
 
+    /**
+     * @notice View total pending rewards for a user.
+     * @param _user The user address to check.
+     * @return Total pending rewards in wei (stored + accrued since last calculation).
+     * @dev Includes both claimed-but-not-withdrawn rewards and newly accrued earnings.
+     * @custom:error InvalidUserAddress if _user is address(0).
+     */
     function pendingRewards(address _user) external view returns (uint256) {
         if (_user == address(0)) revert InvalidUserAddress();
 
