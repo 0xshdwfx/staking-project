@@ -224,6 +224,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         return reward;
     }
 
+    /**
+     * @notice Update the annual reward rate (owner only).
+     * @param newRate The new reward rate in wei (capped at 20% APY).
+     * @dev Validates that newRate > 0 and newRate <= MAX_REWARD_RATE. Affects only
+     *      future reward calculations.
+     * @custom:error ExcessiveRewardRate if newRate is invalid or exceeds the maximum.
+     */
     function setRewardRate(uint256 newRate) external onlyOwner {
         if (newRate == 0 || newRate > MAX_REWARD_RATE) revert ExcessiveRewardRate();
 
