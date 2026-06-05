@@ -178,6 +178,19 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         emit RewardClaimed(msg.sender, rewardAmount);
     }
 
+    function pendingRewards(address _user) external view returns (uint256) {
+        if (_user == address(0)) revert InvalidUserAddress();
+
+        UserInfo memory user = userInfo[_user];
+
+        // calculate and store pending rewards if user already staking
+        if (user.stakedAmount > 0) {
+            user.pendingRewards += calculateReward(_user);
+        }
+
+        return user.pendingRewards;
+    }
+
     /**
      * @notice Calculates accrued rewards for a user based on stake amount and time elapsed.
      * @param _user The address of the user.
