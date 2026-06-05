@@ -27,6 +27,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     event StakeAdded(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
     event RewardClaimed(address indexed user, uint256 amount);
+    event RewardRateUpdate(uint256 newRate);
 
     /////////////////
     /// Errors //////
@@ -38,6 +39,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     error InvalidUserAddress();
     error AmountToUnstakeExceedsStakedAmount();
     error RewardAmountIsZero();
+    error ExcessiveRewardRate();
 
     ////////////////////////
     /// State Variables ///
@@ -53,7 +55,8 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     RewardToken public immutable REWARD_TOKEN;
 
     uint256 public totalStaked;
-    uint256 dailyRewardRate = 1e17; // 10% annual reward rate - 0.1 * 1e18 = 1e17
+    uint256 private dailyRewardRate = 1e17; // 10% annual reward rate - 0.1 * 1e18 = 1e17
+    uint256 private constant MAX_REWARD_RATE = 2e17; // 20% annual reward rate - 0.2 * 1e18 = 2e17
 
     mapping(address => UserInfo) public userInfo;
 
@@ -219,5 +222,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         uint256 reward = (user.stakedAmount * timeElapsed * dailyRewardRate) / (365 * 1e18);
 
         return reward;
+    }
+
+    function setRewardRate(uint256 newRate) external onlyOwner {
+        if (newRate == 0 || newRate > MAX_REWARD_RATE) revert ExcessiveRewardRate();
+
+        dailyRewardRate = newRate;
+
+        emit RewardRateUpdate(newRate);
     }
 }
