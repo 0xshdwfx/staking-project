@@ -270,4 +270,20 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
         emit RewardRateUpdate(newRate);
     }
+
+    /**
+     * @notice Pause staking and unstaking (emergency only).
+     * @dev Only owner. Users can still claim rewards and emergency withdraw.
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @notice Resume staking and unstaking.
+     * @dev Only owner.
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
 }
