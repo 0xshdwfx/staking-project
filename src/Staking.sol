@@ -28,6 +28,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     event Unstaked(address indexed user, uint256 amount);
     event RewardClaimed(address indexed user, uint256 amount);
     event RewardRateUpdate(uint256 newRate);
+    event EmergencyWithdrawal(address indexed user, uint256 amount);
 
     /////////////////
     /// Errors //////
@@ -40,6 +41,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     error AmountToUnstakeExceedsStakedAmount();
     error RewardAmountIsZero();
     error ExcessiveRewardRate();
+    error AmountToWithdrawExceedsStakedAmount();
 
     ////////////////////////
     /// State Variables ///
@@ -201,6 +203,27 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         }
 
         return user.pendingRewards;
+    }
+
+    function emergencyWithdrawal(uint256 amount) external nonReentrant {
+        // validate to ensure amount to unstake is not 0
+        if (amount == 0) revert InvalidStakeAmount();
+
+        UserInfo storage user = userInfo[msg.sender];
+
+        // validate to ensure user has enough staked before withdrawing
+        if (amount > user.stakedAmount) revert AmountToWithdrawExceedsStakedAmount();
+
+        // transfer users staked tokens from contract back to user
+        bool success = STAKING_TOKEN.transfer(msg.sender, amount);
+        if (!success) revert TransferFailed();
+
+        // update balances
+        user.stakedAmount -= amount;
+        totalStaked -= amount;
+
+        // emit event
+        emit EmergencyWithdrawal(msg.sender, amount);
     }
 
     /**
