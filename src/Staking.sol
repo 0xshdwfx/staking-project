@@ -205,6 +205,15 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
         return user.pendingRewards;
     }
 
+    /**
+     * @notice Emergency withdrawal of staked tokens, bypassing the pause mechanism.
+     * @param amount The amount of staking tokens to withdraw.
+     * @dev Users forfeit all pending rewards for immediate principal recovery. Works even
+     *      when contract is paused. Validates sufficient balance before transfer.
+     * @custom:error InvalidStakeAmount if amount == 0.
+     * @custom:error AmountToWithdrawExceedsStakedAmount if amount > staked balance.
+     * @custom:error TransferFailed if token transfer fails.
+     */
     function emergencyWithdrawal(uint256 amount) external nonReentrant {
         // validate to ensure amount to unstake is not 0
         if (amount == 0) revert InvalidStakeAmount();
