@@ -34,14 +34,14 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     /// Errors //////
     /////////////////
 
-    error InvalidTokenAddress();
-    error InvalidStakeAmount();
-    error TransferFailed();
-    error InvalidUserAddress();
-    error AmountToUnstakeExceedsStakedAmount();
-    error RewardAmountIsZero();
-    error ExcessiveRewardRate();
-    error AmountToWithdrawExceedsStakedAmount();
+    error Staking__InvalidTokenAddress();
+    error Staking__InvalidStakeAmount();
+    error Staking__TransferFailed();
+    error Staking__InvalidUserAddress();
+    error Staking__AmountToUnstakeExceedsStakedAmount();
+    error Staking__RewardAmountIsZero();
+    error Staking__ExcessiveRewardRate();
+    error Staking__AmountToWithdrawExceedsStakedAmount();
 
     ////////////////////////
     /// State Variables ///
@@ -72,11 +72,11 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _rewardToken The address of the deployed RewardToken contract.
      * @dev Validates that tokenAddress is not zero. Initializes Ownable with msg.sender.
      *      Stores both token references as immutable for gas efficiency and security.
-     * @custom:error InvalidTokenAddress if either _stakingToken or _rewardToken is address(0).
+     * @custom:error Staking__InvalidTokenAddress if either _stakingToken or _rewardToken is address(0).
      */
     constructor(address _stakingToken, address _rewardToken) Ownable(msg.sender) {
-        if (_stakingToken == address(0)) revert InvalidTokenAddress();
-        if (_rewardToken == address(0)) revert InvalidTokenAddress();
+        if (_stakingToken == address(0)) revert Staking__InvalidTokenAddress();
+        if (_rewardToken == address(0)) revert Staking__InvalidTokenAddress();
 
         STAKING_TOKEN = IERC20(_stakingToken);
         REWARD_TOKEN = RewardToken(_rewardToken);
@@ -91,12 +91,12 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param amount Amount of staking tokens to deposit (in wei).
      * @dev Calculates pending rewards, transfers tokens, and updates user balance.
      *      Protected by reentrancy guard and pausable modifier.
-     * @custom:error InvalidStakeAmount if amount == 0
-     * @custom:error TransferFailed if token transfer fails
+     * @custom:error Staking__InvalidStakeAmount if amount == 0
+     * @custom:error Staking__TransferFailed if token transfer fails
      */
     function stake(uint256 amount) external whenNotPaused nonReentrant {
         // validate to ensure amount to stake is not 0
-        if (amount == 0) revert InvalidStakeAmount();
+        if (amount == 0) revert Staking__InvalidStakeAmount();
 
         UserInfo storage user = userInfo[msg.sender];
 
@@ -110,7 +110,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
         // transfer staking token from user to the contract
         bool success = STAKING_TOKEN.transferFrom(msg.sender, address(this), amount);
-        if (!success) revert TransferFailed();
+        if (!success) revert Staking__TransferFailed();
 
         // update balances
         user.stakedAmount += amount;
@@ -125,18 +125,18 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param amount Amount of staking tokens to unstake.
      * @dev Calculates pending reward, removes stake, and updates balances.
      *      Protected by reentrancy guard and pausable modifier.
-     * @custom:error InvalidStakeAmount if amount == 0.
-     * @custom:error AmountToUnstakeExceedsStakedAmount if unstake amount is greater than staked amount.
-     * @custom:error TransferFailed if token transfer fails.
+     * @custom:error Staking__InvalidStakeAmount if amount == 0.
+     * @custom:error Staking__AmountToUnstakeExceedsStakedAmount if unstake amount is greater than staked amount.
+     * @custom:error Staking__TransferFailed if token transfer fails.
      */
     function unstake(uint256 amount) external whenNotPaused nonReentrant {
         // validate to ensure amount to unstake is not 0
-        if (amount == 0) revert InvalidStakeAmount();
+        if (amount == 0) revert Staking__InvalidStakeAmount();
 
         UserInfo storage user = userInfo[msg.sender];
 
         // validate to ensure user has enough staked before withdrawing
-        if (amount > user.stakedAmount) revert AmountToUnstakeExceedsStakedAmount();
+        if (amount > user.stakedAmount) revert Staking__AmountToUnstakeExceedsStakedAmount();
 
         // calculate and store pending rewards if user already staking
         if (user.stakedAmount > 0) {
@@ -148,7 +148,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
         // transfer users staked tokens from contract back to user
         bool success = STAKING_TOKEN.transfer(msg.sender, amount);
-        if (!success) revert TransferFailed();
+        if (!success) revert Staking__TransferFailed();
 
         // update balances
         user.stakedAmount -= amount;
@@ -163,14 +163,14 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @dev Validates that pending rewards exist, mints reward tokens to the user,
      *      clears pending rewards balance, and resets the reward calculation timer.
      *      Protected by reentrancy guard and pausable modifier.
-     * @custom:error RewardAmountIsZero if pendingRewards == 0.
+     * @custom:error Staking__RewardAmountIsZero if pendingRewards == 0.
      */
     function claimReward() external nonReentrant {
         UserInfo storage user = userInfo[msg.sender];
 
         // validate to ensure reward amount is not 0
         uint256 rewardAmount = user.pendingRewards;
-        if (rewardAmount == 0) revert RewardAmountIsZero();
+        if (rewardAmount == 0) revert Staking__RewardAmountIsZero();
 
         // send reward to user
         REWARD_TOKEN.mint(msg.sender, rewardAmount);
@@ -190,10 +190,10 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param _user The user address to check.
      * @return Total pending rewards in wei (stored + accrued since last calculation).
      * @dev Includes both claimed-but-not-withdrawn rewards and newly accrued earnings.
-     * @custom:error InvalidUserAddress if _user is address(0).
+     * @custom:error Staking__InvalidUserAddress if _user is address(0).
      */
     function pendingRewards(address _user) external view returns (uint256) {
-        if (_user == address(0)) revert InvalidUserAddress();
+        if (_user == address(0)) revert Staking__InvalidUserAddress();
 
         UserInfo memory user = userInfo[_user];
 
@@ -210,22 +210,22 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param amount The amount of staking tokens to withdraw.
      * @dev Users forfeit all pending rewards for immediate principal recovery. Works even
      *      when contract is paused. Validates sufficient balance before transfer.
-     * @custom:error InvalidStakeAmount if amount == 0.
-     * @custom:error AmountToWithdrawExceedsStakedAmount if amount > staked balance.
-     * @custom:error TransferFailed if token transfer fails.
+     * @custom:error Staking__InvalidStakeAmount if amount == 0.
+     * @custom:error Staking__AmountToWithdrawExceedsStakedAmount if amount > staked balance.
+     * @custom:error Staking__TransferFailed if token transfer fails.
      */
     function emergencyWithdrawal(uint256 amount) external nonReentrant {
         // validate to ensure amount to unstake is not 0
-        if (amount == 0) revert InvalidStakeAmount();
+        if (amount == 0) revert Staking__InvalidStakeAmount();
 
         UserInfo storage user = userInfo[msg.sender];
 
         // validate to ensure user has enough staked before withdrawing
-        if (amount > user.stakedAmount) revert AmountToWithdrawExceedsStakedAmount();
+        if (amount > user.stakedAmount) revert Staking__AmountToWithdrawExceedsStakedAmount();
 
         // transfer users staked tokens from contract back to user
         bool success = STAKING_TOKEN.transfer(msg.sender, amount);
-        if (!success) revert TransferFailed();
+        if (!success) revert Staking__TransferFailed();
 
         // update balances
         user.stakedAmount -= amount;
@@ -241,10 +241,10 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @return Reward amount in wei earned since last calculation.
      * @dev Uses 10% APY with formula: (stakedAmount × timeElapsed × rate) / (365 × 1e18).
      *      Multiplies before dividing to preserve precision.
-     * @custom:error InvalidUserAddress if _user is address(0).
+     * @custom:error Staking__InvalidUserAddress if _user is address(0).
      */
     function calculateReward(address _user) internal view returns (uint256) {
-        if (_user == address(0)) revert InvalidUserAddress();
+        if (_user == address(0)) revert Staking__InvalidUserAddress();
 
         UserInfo memory user = userInfo[_user];
 
@@ -261,10 +261,10 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      * @param newRate The new reward rate in wei (capped at 20% APY).
      * @dev Validates that newRate > 0 and newRate <= MAX_REWARD_RATE. Affects only
      *      future reward calculations.
-     * @custom:error ExcessiveRewardRate if newRate is invalid or exceeds the maximum.
+     * @custom:error Staking__ExcessiveRewardRate if newRate is invalid or exceeds the maximum.
      */
     function setRewardRate(uint256 newRate) external onlyOwner {
-        if (newRate == 0 || newRate > MAX_REWARD_RATE) revert ExcessiveRewardRate();
+        if (newRate == 0 || newRate > MAX_REWARD_RATE) revert Staking__ExcessiveRewardRate();
 
         dailyRewardRate = newRate;
 
