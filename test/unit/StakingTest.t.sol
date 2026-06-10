@@ -25,4 +25,14 @@ contract StakingTest is Test {
         vm.prank(user);
         stakingToken.approve(address(staking), type(uint256).max); // type(uint256).max - testing purposes only
     }
+
+    ///////////////////
+    ///// Stake ///////
+    ///////////////////
+
+    function testStakeRevertsIfAmountIsZero() public {
+        vm.prank(user);
+        vm.expectRevert(Staking.Staking__InvalidStakeAmount.selector);
+        staking.stake(0);
+    }
 }
