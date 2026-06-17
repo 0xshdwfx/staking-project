@@ -243,7 +243,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      *      Multiplies before dividing to preserve precision.
      * @custom:error Staking__InvalidUserAddress if _user is address(0).
      */
-    function calculateReward(address _user) internal view returns (uint256) {
+    function calculateReward(address _user) public view returns (uint256) {
         if (_user == address(0)) revert Staking__InvalidUserAddress();
 
         UserInfo memory user = userInfo[_user];
@@ -285,5 +285,13 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
      */
     function unpause() external onlyOwner {
         _unpause();
+    }
+
+    ////////////////////////////
+    ///// Getter Functions /////
+    ///////////////////////////
+
+    function getUserInfo(address _user) external view returns (UserInfo memory) {
+        return userInfo[_user];
     }
 }
