@@ -35,4 +35,24 @@ contract StakingTest is Test {
         vm.expectRevert(Staking.Staking__InvalidStakeAmount.selector);
         staking.stake(0);
     }
+
+    function testIfPendingRewardsAreStoredIfUserIsAlreadyStaking() public {
+        // first stake
+        vm.prank(user);
+        staking.stake(1e18); // 1 token
+
+        // advance the time
+        vm.warp(block.timestamp + 1 days); // 1 = 1 day
+
+        // calculate expected reward before second stake
+        uint256 expectedReward = staking.calculateReward(user);
+
+        // second stake
+        vm.prank(user);
+        staking.stake(1e18);
+
+        // check pending rewards
+        Staking.UserInfo memory userInfo = staking.getUserInfo(user);
+        assertEq(userInfo.pendingRewards, expectedReward);
+    }
 }
