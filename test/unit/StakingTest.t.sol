@@ -55,4 +55,19 @@ contract StakingTest is Test {
         Staking.UserInfo memory userInfo = staking.getUserInfo(user);
         assertEq(userInfo.pendingRewards, expectedReward);
     }
+
+    function testLastRewardTimeIsResetAfterStake() public {
+        // first stake
+        vm.prank(user);
+        staking.stake(1e18);
+
+        vm.warp(block.timestamp + 1 days);
+
+        // second stake
+        vm.prank(user);
+        staking.stake(1e18);
+
+        Staking.UserInfo memory userInfo = staking.getUserInfo(user);
+        assertEq(userInfo.lastRewardTime, block.timestamp);
+    }
 }
