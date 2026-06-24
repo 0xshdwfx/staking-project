@@ -294,4 +294,8 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     function getUserInfo(address _user) external view returns (UserInfo memory) {
         return userInfo[_user];
     }
+
+    function getContractBalance() external view returns (uint256) {
+        return address(this).balance;
+    }
 }
