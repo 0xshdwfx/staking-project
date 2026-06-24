@@ -13,7 +13,7 @@ contract StakingTest is Test {
 
     // test user
     address public user = makeAddr("user");
-    uint256 public constant STARTING_USER_BALANCE = 10e18;
+    uint256 public constant STARTING_USER_BALANCE = 1e18;
 
     function setUp() public {
         stakingToken = new ERC20Mock();
@@ -69,5 +69,16 @@ contract StakingTest is Test {
 
         Staking.UserInfo memory userInfo = staking.getUserInfo(user);
         assertEq(userInfo.lastRewardTime, block.timestamp);
+    }
+
+    function testUserStakesExactAmount() public {
+        vm.prank(user);
+
+        staking.stake(1e18);
+
+        Staking.UserInfo memory userInfoAfterStake = staking.getUserInfo(user);
+        uint256 userBalanceAfterStake = userInfoAfterStake.stakedAmount;
+
+        assertEq(userBalanceAfterStake, 1e18);
     }
 }
