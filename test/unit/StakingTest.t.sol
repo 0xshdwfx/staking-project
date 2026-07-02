@@ -97,8 +97,16 @@ contract StakingTest is Test {
 
         vm.stopPrank();
 
-        assertEq(stakingTokenBalanceAfterStake, stakingTokenBalanceBeforeStake + USER_STAKE_AMOUNT);
-        assertEq(userBalanceAfterStake, userBalanceBeforeStake - USER_STAKE_AMOUNT);
+        assertEq(
+            stakingTokenBalanceAfterStake,
+            stakingTokenBalanceBeforeStake + USER_STAKE_AMOUNT,
+            "contract stakingToken balance should increase by exactly USER_STAKE_AMOUNT"
+        );
+        assertEq(
+            userBalanceAfterStake,
+            userBalanceBeforeStake - USER_STAKE_AMOUNT,
+            "user stakingToken balance should decrease by exactly USER_STAKE_AMOUNT"
+        );
     }
 
     function testTotalStakedIncreasesAfterUserStakes() public {
