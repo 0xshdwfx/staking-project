@@ -14,6 +14,7 @@ contract StakingTest is Test {
     // test user
     address public user = makeAddr("user");
     uint256 public constant STARTING_USER_BALANCE = 10e18;
+    uint256 public constant USER_STAKE_AMOUNT = 1e18;
 
     function setUp() public {
         stakingToken = new ERC20Mock();
@@ -39,7 +40,7 @@ contract StakingTest is Test {
     function testIfPendingRewardsAreStoredIfUserIsAlreadyStaking() public {
         // first stake
         vm.prank(user);
-        staking.stake(1e18); // 1 token
+        staking.stake(USER_STAKE_AMOUNT); // 1 token
 
         // advance the time
         vm.warp(block.timestamp + 1 days); // 1 = 1 day
@@ -49,7 +50,7 @@ contract StakingTest is Test {
 
         // second stake
         vm.prank(user);
-        staking.stake(1e18);
+        staking.stake(USER_STAKE_AMOUNT);
 
         // check pending rewards
         Staking.UserInfo memory userInfo = staking.getUserInfo(user);
@@ -59,13 +60,13 @@ contract StakingTest is Test {
     function testLastRewardTimeIsResetAfterStake() public {
         // first stake
         vm.prank(user);
-        staking.stake(1e18);
+        staking.stake(USER_STAKE_AMOUNT);
 
         vm.warp(block.timestamp + 1 days);
 
         // second stake
         vm.prank(user);
-        staking.stake(1e18);
+        staking.stake(USER_STAKE_AMOUNT);
 
         Staking.UserInfo memory userInfo = staking.getUserInfo(user);
         assertEq(userInfo.lastRewardTime, block.timestamp);
@@ -74,19 +75,11 @@ contract StakingTest is Test {
     function testUserStakesExactAmount() public {
         vm.prank(user);
 
-        staking.stake(1e18);
+        staking.stake(USER_STAKE_AMOUNT);
 
         Staking.UserInfo memory userInfoAfterStake = staking.getUserInfo(user);
         uint256 userBalanceAfterStake = userInfoAfterStake.stakedAmount;
 
-        assertEq(userBalanceAfterStake, 1e18);
+        assertEq(userBalanceAfterStake, USER_STAKE_AMOUNT);
     }
-
-    // function testStakingTokenIsTransferredFromUserToContract() public {
-    //     vm.prank(user);
-
-    // }
-
-    // uint256 contractBalanceBeforeStake = staking.getContractBalance();
-    // uint256 contractBalanceAfterStake = staking.getContractBalance();
 }
