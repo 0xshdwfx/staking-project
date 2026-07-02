@@ -302,3 +302,4 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     function getTotalStaked() external view returns (uint256) {
         return totalStaked;
     }
+}
