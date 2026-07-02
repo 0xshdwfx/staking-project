@@ -100,4 +100,22 @@ contract StakingTest is Test {
         assertEq(stakingTokenBalanceAfterStake, stakingTokenBalanceBeforeStake + USER_STAKE_AMOUNT);
         assertEq(userBalanceAfterStake, userBalanceBeforeStake - USER_STAKE_AMOUNT);
     }
+
+    function testTotalStakedIncreasesAfterUserStakes() public {
+        vm.startPrank(user);
+
+        uint256 totalStakedAmountBeforeUserStake = staking.getTotalStaked();
+
+        staking.stake(USER_STAKE_AMOUNT);
+
+        uint256 totalStakedAmountAfterUserStake = staking.getTotalStaked();
+
+        vm.stopPrank();
+
+        assertEq(
+            totalStakedAmountAfterUserStake,
+            totalStakedAmountBeforeUserStake + USER_STAKE_AMOUNT,
+            "totalStaked should increase by exactly USER_STAKE_AMOUNT"
+        );
+    }
 }
