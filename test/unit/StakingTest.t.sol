@@ -2,6 +2,7 @@
 pragma solidity ^0.8.26;
 
 import {Test} from "forge-std/Test.sol";
+import {console} from "forge-std/console.sol";
 import {Staking} from "src/Staking.sol";
 import {RewardToken} from "src/RewardToken.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
@@ -81,5 +82,22 @@ contract StakingTest is Test {
         uint256 userBalanceAfterStake = userInfoAfterStake.stakedAmount;
 
         assertEq(userBalanceAfterStake, USER_STAKE_AMOUNT);
+    }
+
+    function testStakingTokenIsTransferredFromUserToContract() public {
+        vm.startPrank(user);
+
+        uint256 stakingTokenBalanceBeforeStake = stakingToken.balanceOf(address(staking));
+        uint256 userBalanceBeforeStake = stakingToken.balanceOf(user);
+
+        staking.stake(USER_STAKE_AMOUNT);
+
+        uint256 stakingTokenBalanceAfterStake = stakingToken.balanceOf(address(staking));
+        uint256 userBalanceAfterStake = stakingToken.balanceOf(user);
+
+        vm.stopPrank();
+
+        assertEq(stakingTokenBalanceAfterStake, stakingTokenBalanceBeforeStake + USER_STAKE_AMOUNT);
+        assertEq(userBalanceAfterStake, userBalanceBeforeStake - USER_STAKE_AMOUNT);
     }
 }
