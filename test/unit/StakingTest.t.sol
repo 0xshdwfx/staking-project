@@ -18,6 +18,9 @@ contract StakingTest is Test {
     uint256 public constant STARTING_USER_BALANCE = 10e18;
     uint256 public constant USER_STAKE_AMOUNT = 1e18;
 
+    // events
+    event StakeAdded(address indexed user, uint256 amount);
+
     function setUp() public {
         stakingToken = new ERC20Mock();
         rewardToken = new RewardToken();
@@ -134,6 +137,15 @@ contract StakingTest is Test {
         vm.prank(user);
 
         vm.expectRevert(Pausable.EnforcedPause.selector);
+        staking.stake(USER_STAKE_AMOUNT);
+    }
+
+    function testAddingStakeEmitsEvent() public {
+        vm.prank(user);
+
+        vm.expectEmit(true, false, false, true, address(staking));
+        emit StakeAdded(user, USER_STAKE_AMOUNT);
+
         staking.stake(USER_STAKE_AMOUNT);
     }
 }
