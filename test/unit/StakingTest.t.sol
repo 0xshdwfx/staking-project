@@ -6,6 +6,7 @@ import {console} from "forge-std/console.sol";
 import {Staking} from "src/Staking.sol";
 import {RewardToken} from "src/RewardToken.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
 contract StakingTest is Test {
     ERC20Mock stakingToken;
@@ -125,5 +126,14 @@ contract StakingTest is Test {
             totalStakedAmountBeforeUserStake + USER_STAKE_AMOUNT,
             "totalStaked should increase by exactly USER_STAKE_AMOUNT"
         );
+    }
+
+    function testRevertWhenContractIsPaused() public {
+        staking.pause();
+
+        vm.prank(user);
+
+        vm.expectRevert(Pausable.EnforcedPause.selector);
+        staking.stake(USER_STAKE_AMOUNT);
     }
 }
