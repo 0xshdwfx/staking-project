@@ -148,4 +148,14 @@ contract StakingTest is Test {
 
         staking.stake(USER_STAKE_AMOUNT);
     }
+
+    /////////////////////
+    ////// Unstake //////
+    /////////////////////
+
+    function testUnstakeRevertsIfAmountIsZero() public {
+        vm.prank(user);
+        vm.expectRevert(Staking.Staking__InvalidStakeAmount.selector);
+        staking.unstake(0);
+    }
 }
