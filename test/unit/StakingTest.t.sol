@@ -21,6 +21,7 @@ contract StakingTest is Test {
 
     // events
     event StakeAdded(address indexed user, uint256 amount);
+    event Unstaked(address indexed user, uint256 amount);
 
     // set up
     function setUp() public {
@@ -207,5 +208,17 @@ contract StakingTest is Test {
             totalStakedAmountBeforeUserUnstake - USER_UNSTAKE_AMOUNT,
             "totalStaked should decrease by exactly USER_UNSTAKE_AMOUNT"
         );
+    }
+
+    function testUnstakingEmitsEvent() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.expectEmit(true, false, false, true, address(staking));
+        emit Unstaked(user, USER_UNSTAKE_AMOUNT);
+
+        staking.unstake(USER_UNSTAKE_AMOUNT);
+
+        vm.stopPrank();
     }
 }
