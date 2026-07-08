@@ -189,4 +189,23 @@ contract StakingTest is Test {
             "User staked amount should decrease by exactly USER_UNSTAKE_AMOUNT"
         );
     }
+
+    function testTotalStakedDecreasesAfterUserUnstakes() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        uint256 totalStakedAmountBeforeUserUnstake = staking.getTotalStaked();
+
+        staking.unstake(USER_UNSTAKE_AMOUNT);
+
+        uint256 totalStakedAmountAfterUserUnstake = staking.getTotalStaked();
+
+        vm.stopPrank();
+
+        assertEq(
+            totalStakedAmountAfterUserUnstake,
+            totalStakedAmountBeforeUserUnstake - USER_UNSTAKE_AMOUNT,
+            "totalStaked should decrease by exactly USER_UNSTAKE_AMOUNT"
+        );
+    }
 }
