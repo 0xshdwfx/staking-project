@@ -221,4 +221,16 @@ contract StakingTest is Test {
 
         vm.stopPrank();
     }
+
+    /////////////////////
+    //// ClaimReward ////
+    /////////////////////
+
+    function testClaimRewardsRevertsIfRewardAmountIsZero() public {
+        vm.prank(user);
+
+        vm.expectRevert(Staking.Staking__RewardAmountIsZero.selector);
+
+        staking.claimReward();
+    }
 }
