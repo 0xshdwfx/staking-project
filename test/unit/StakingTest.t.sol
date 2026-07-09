@@ -251,4 +251,20 @@ contract StakingTest is Test {
 
         assertGt(userTokenBalanceAfterClaiming, userTokenBalanceBeforeClaiming);
     }
+
+    function testPendingRewardsIsResetToZero() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.warp(block.timestamp + 1 days);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        staking.claimReward();
+
+        Staking.UserInfo memory userInfoAfterClaimReward = staking.getUserInfo(user);
+
+        vm.stopPrank();
+
+        assertEq(userInfoAfterClaimReward.pendingRewards, 0, "pendingRewards should be reset to zero after claiming");
+    }
 }
