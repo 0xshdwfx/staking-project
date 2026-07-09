@@ -18,6 +18,7 @@ contract StakingTest is Test {
     uint256 public constant STARTING_USER_BALANCE = 10e18;
     uint256 public constant USER_STAKE_AMOUNT = 1e18;
     uint256 public constant USER_UNSTAKE_AMOUNT = 1e18;
+    uint256 public constant USER_PENDING_REWARDS = 5e17;
 
     // events
     event StakeAdded(address indexed user, uint256 amount);
@@ -33,6 +34,7 @@ contract StakingTest is Test {
 
         vm.prank(user);
         stakingToken.approve(address(staking), type(uint256).max); // type(uint256).max - testing purposes only
+        rewardToken.transferOwnership(address(staking)); // purely for testing purposes to allow Staking contract to call mint()
     }
 
     ///////////////////
@@ -228,9 +230,25 @@ contract StakingTest is Test {
 
     function testClaimRewardsRevertsIfRewardAmountIsZero() public {
         vm.prank(user);
-
         vm.expectRevert(Staking.Staking__RewardAmountIsZero.selector);
+        staking.claimReward();
+    }
+
+    function testRewardSentToUser() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.warp(block.timestamp + 1 days);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        uint256 userTokenBalanceBeforeClaiming = rewardToken.balanceOf(user);
 
         staking.claimReward();
+
+        uint256 userTokenBalanceAfterClaiming = rewardToken.balanceOf(user);
+
+        vm.stopPrank();
+
+        assertGt(userTokenBalanceAfterClaiming, userTokenBalanceBeforeClaiming);
     }
 }
