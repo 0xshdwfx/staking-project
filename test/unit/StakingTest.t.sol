@@ -18,11 +18,11 @@ contract StakingTest is Test {
     uint256 public constant STARTING_USER_BALANCE = 10e18;
     uint256 public constant USER_STAKE_AMOUNT = 1e18;
     uint256 public constant USER_UNSTAKE_AMOUNT = 1e18;
-    uint256 public constant USER_PENDING_REWARDS = 5e17;
 
     // events
     event StakeAdded(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
+    event RewardClaimed(address indexed user, uint256 amount);
 
     // set up
     function setUp() public {
@@ -266,5 +266,23 @@ contract StakingTest is Test {
         vm.stopPrank();
 
         assertEq(userInfoAfterClaimReward.pendingRewards, 0, "pendingRewards should be reset to zero after claiming");
+    }
+
+    function testClaimRewardEmitsRewardClaimedEvent() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.warp(block.timestamp + 1 days);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        Staking.UserInfo memory userInfo = staking.getUserInfo(user);
+        uint256 pendingRewardsAmount = userInfo.pendingRewards;
+
+        vm.expectEmit(true, false, false, true, address(staking));
+        emit RewardClaimed(user, pendingRewardsAmount);
+
+        staking.claimReward();
+
+        vm.stopPrank();
     }
 }
