@@ -18,6 +18,7 @@ contract StakingTest is Test {
     uint256 public constant STARTING_USER_BALANCE = 10e18;
     uint256 public constant USER_STAKE_AMOUNT = 1e18;
     uint256 public constant USER_UNSTAKE_AMOUNT = 1e18;
+    uint256 public constant USER_EMERGENCY_WITHDRAWAL_AMOUNT = 2e18;
 
     // events
     event StakeAdded(address indexed user, uint256 amount);
@@ -321,5 +322,13 @@ contract StakingTest is Test {
         vm.prank(user);
         vm.expectRevert(Staking.Staking__InvalidStakeAmount.selector);
         staking.emergencyWithdrawal(0);
+    }
+
+    function testRevertIfAmountToWithdrawExceedsStakedAmount() public {
+        vm.prank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.expectRevert(Staking.Staking__AmountToWithdrawExceedsStakedAmount.selector);
+        staking.emergencyWithdrawal(USER_EMERGENCY_WITHDRAWAL_AMOUNT);
     }
 }
