@@ -312,4 +312,14 @@ contract StakingTest is Test {
 
         assertEq(pendingRewardsReturnedAmount, userPendingRewards);
     }
+
+    ////////////////////////////
+    //// EmergencyWithdrawal ////
+    ////////////////////////////
+
+    function testRevertIfAmountToWithdrawIsZero() public {
+        vm.prank(user);
+        vm.expectRevert(Staking.Staking__InvalidStakeAmount.selector);
+        staking.emergencyWithdrawal(0);
+    }
 }
