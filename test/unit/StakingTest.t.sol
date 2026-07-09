@@ -295,4 +295,21 @@ contract StakingTest is Test {
         vm.expectRevert(Staking.Staking__InvalidUserAddress.selector);
         staking.pendingRewards(address(0));
     }
+
+    function testPendingRewardsReturnsStoredAmount() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.warp(block.timestamp + 1 days);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        Staking.UserInfo memory userInfo = staking.getUserInfo(user);
+        uint256 userPendingRewards = userInfo.pendingRewards;
+
+        uint256 pendingRewardsReturnedAmount = staking.pendingRewards(user);
+
+        vm.stopPrank();
+
+        assertEq(pendingRewardsReturnedAmount, userPendingRewards);
+    }
 }
