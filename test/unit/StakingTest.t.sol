@@ -285,4 +285,14 @@ contract StakingTest is Test {
 
         vm.stopPrank();
     }
+
+    /////////////////////////
+    //// PendingRewards ////
+    //////////////////////
+
+    function testPendingRewardsRevertsIfUserDoesNotExist() public {
+        vm.prank(user);
+        vm.expectRevert(Staking.Staking__InvalidUserAddress.selector);
+        staking.pendingRewards(address(0));
+    }
 }
