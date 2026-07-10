@@ -19,7 +19,8 @@ contract StakingTest is Test {
     uint256 public constant USER_STAKE_AMOUNT = 1e18;
     uint256 public constant USER_UNSTAKE_AMOUNT = 1e18;
     uint256 public constant USER_EMERGENCY_WITHDRAWAL_AMOUNT = 2e18;
-    uint256 public constant TIME_ELAPSED = 1 days;
+    uint256 public constant TIME_ELAPSED_ONE_DAY = 1 days;
+    uint256 public constant TIME_ELAPSED_ONE_YEAR = 365 days;
     uint256 public constant DAILY_REWARD_RATE = 1e17;
 
     // events
@@ -383,13 +384,33 @@ contract StakingTest is Test {
 
         vm.warp(block.timestamp + 1 days);
 
-        uint256 reward = (USER_STAKE_AMOUNT * TIME_ELAPSED * DAILY_REWARD_RATE) / (365 * 1e18);
+        uint256 reward = (USER_STAKE_AMOUNT * TIME_ELAPSED_ONE_DAY * DAILY_REWARD_RATE) / (365 * 1e18);
         uint256 calculateRewardsReturnedAmount = staking.calculateReward(user);
 
         vm.stopPrank();
 
         assertEq(
-            calculateRewardsReturnedAmount, reward, "calculateReward should return correct amount after 1 day elapsed"
+            calculateRewardsReturnedAmount,
+            reward,
+            "calculateReward should return correct amount after 1 day has elapsed"
+        );
+    }
+
+    function testCalculateRewardsIsCorrectAfter365DaysHavePassed() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.warp(block.timestamp + 365 days);
+
+        uint256 reward = (USER_STAKE_AMOUNT * TIME_ELAPSED_ONE_YEAR * DAILY_REWARD_RATE) / (365 * 1e18);
+        uint256 calculateRewardsReturnedAmount = staking.calculateReward(user);
+
+        vm.stopPrank();
+
+        assertEq(
+            calculateRewardsReturnedAmount,
+            reward,
+            "calculateReward should return correct amount after 1 year has elapsed"
         );
     }
 }
