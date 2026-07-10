@@ -347,4 +347,14 @@ contract StakingTest is Test {
 
         vm.stopPrank();
     }
+
+    //////////////////////////
+    //// CalculateReward ////
+    ////////////////////////
+
+    function testCalculateRewardsRevertsIfUserDoesNotExist() public {
+        vm.prank(user);
+        vm.expectRevert(Staking.Staking__InvalidUserAddress.selector);
+        staking.calculateReward(address(0));
+    }
 }
