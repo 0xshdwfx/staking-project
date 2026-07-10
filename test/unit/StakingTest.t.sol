@@ -357,4 +357,17 @@ contract StakingTest is Test {
         vm.expectRevert(Staking.Staking__InvalidUserAddress.selector);
         staking.calculateReward(address(0));
     }
+
+    function testCalculateRewardReturnsZeroIfNoTimeHasPassed() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        uint256 calculateRewardsReturnedAmount = staking.calculateReward(user);
+
+        vm.stopPrank();
+
+        assertEq(
+            calculateRewardsReturnedAmount, 0, "calculateReward should return 0 when no time has elapsed since stake"
+        );
+    }
 }
