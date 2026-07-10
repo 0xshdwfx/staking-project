@@ -312,7 +312,11 @@ contract StakingTest is Test {
 
         vm.stopPrank();
 
-        assertEq(pendingRewardsReturnedAmount, userPendingRewards);
+        assertEq(
+            pendingRewardsReturnedAmount,
+            userPendingRewards,
+            "pendingRewards() should return the same amount as stored in user info"
+        );
     }
 
     /////////////////////////////
