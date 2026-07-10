@@ -24,6 +24,7 @@ contract StakingTest is Test {
     event StakeAdded(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
     event RewardClaimed(address indexed user, uint256 amount);
+    event EmergencyWithdrawal(address indexed user, uint256 amount);
 
     // set up
     function setUp() public {
@@ -314,7 +315,7 @@ contract StakingTest is Test {
         assertEq(pendingRewardsReturnedAmount, userPendingRewards);
     }
 
-    ////////////////////////////
+    /////////////////////////////
     //// EmergencyWithdrawal ////
     ////////////////////////////
 
@@ -330,5 +331,20 @@ contract StakingTest is Test {
 
         vm.expectRevert(Staking.Staking__AmountToWithdrawExceedsStakedAmount.selector);
         staking.emergencyWithdrawal(USER_EMERGENCY_WITHDRAWAL_AMOUNT);
+    }
+
+    function testEmergencyWithdrawalEmitsEvent() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        Staking.UserInfo memory userInfo = staking.getUserInfo(user);
+        uint256 userStakedAmount = userInfo.stakedAmount;
+
+        vm.expectEmit(true, false, false, true, address(staking));
+        emit EmergencyWithdrawal(user, userStakedAmount);
+
+        staking.emergencyWithdrawal(userStakedAmount);
+
+        vm.stopPrank();
     }
 }
