@@ -30,6 +30,7 @@ contract StakingTest is Test {
     event Unstaked(address indexed user, uint256 amount);
     event RewardClaimed(address indexed user, uint256 amount);
     event EmergencyWithdrawal(address indexed user, uint256 amount);
+    event RewardRateUpdate(uint256 newRate);
 
     // set up
     function setUp() public {
@@ -440,5 +441,12 @@ contract StakingTest is Test {
             NEW_REWARD_RATE,
             "dailyRewardRate should be updated to the new rate after setRewardRate"
         );
+    }
+
+    function testSetRewardRateEmitsRewardRateUpdateEvent() public {
+        vm.expectEmit(false, false, false, true, address(staking));
+        emit RewardRateUpdate(NEW_REWARD_RATE);
+
+        staking.setRewardRate(NEW_REWARD_RATE);
     }
 }
