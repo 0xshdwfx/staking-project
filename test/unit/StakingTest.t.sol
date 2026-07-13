@@ -84,7 +84,7 @@ contract StakingTest is Test {
         Staking.UserInfo memory userInfo = staking.getUserInfo(user);
         uint256 userPendingRewards = userInfo.pendingRewards;
 
-        assertEq(userPendingRewards, 0);
+        assertEq(userPendingRewards, 0, "pendingRewards should return 0 on users first stake");
     }
 
     function testLastRewardTimeIsResetAfterStake() public {
