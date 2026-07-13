@@ -31,18 +31,18 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">4</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-07-06 17:16:34</td>
+            <td class="headerValue">2026-07-13 18:09:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
             <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">2</td>
           </tr>
                   <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -73,12 +73,12 @@
 <span id="L11"><span class="lineNum">      11</span>              : </span>
 <span id="L12"><span class="lineNum">      12</span>              :     uint256 private constant INITIAL_MINT_VALUE = 1e6 * 1e18; // 1 million tokens with 18 decimals</span>
 <span id="L13"><span class="lineNum">      13</span>              : </span>
-<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">           8 :     constructor() ERC20(&quot;Reward Token&quot;, &quot;RWT&quot;) Ownable(msg.sender) {</span></span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">           8 :         _mint(msg.sender, INITIAL_MINT_VALUE);</span></span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaGNC">          30 :     constructor() ERC20(&quot;Reward Token&quot;, &quot;RWT&quot;) Ownable(msg.sender) {</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">          30 :         _mint(msg.sender, INITIAL_MINT_VALUE);</span></span>
 <span id="L16"><span class="lineNum">      16</span>              :     }</span>
 <span id="L17"><span class="lineNum">      17</span>              : </span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaUNC">           0 :     function mint(address to, uint256 amount) external onlyOwner {</span></span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaUNC">           0 :         _mint(to, amount);</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           3 :     function mint(address to, uint256 amount) external onlyOwner {</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           3 :         _mint(to, amount);</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :     }</span>
 <span id="L21"><span class="lineNum">      21</span>              : }</span>
         </pre>

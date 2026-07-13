@@ -153,6 +153,17 @@ contract StakingTest is Test {
         staking.stake(USER_STAKE_AMOUNT);
     }
 
+    function testStakeWorksAfterUnpause() public {
+        staking.pause();
+        staking.unpause();
+
+        vm.startPrank(user);
+
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.stopPrank();
+    }
+
     function testAddingStakeEmitsEvent() public {
         vm.prank(user);
 
