@@ -22,6 +22,7 @@ contract StakingTest is Test {
     uint256 public constant TIME_ELAPSED_ONE_DAY = 1 days;
     uint256 public constant TIME_ELAPSED_ONE_YEAR = 365 days;
     uint256 public constant DAILY_REWARD_RATE = 1e17;
+    uint256 public constant EXCESSIVE_REWARD_RATE = 3e17;
 
     // events
     event StakeAdded(address indexed user, uint256 amount);
@@ -421,5 +422,10 @@ contract StakingTest is Test {
     function testSetRewardRateRevertsIfNewRateIsZero() public {
         vm.expectRevert(Staking.Staking__ExcessiveRewardRate.selector);
         staking.setRewardRate(0);
+    }
+
+    function testSetRewardRateRevertsIfNewRateIsGreaterThanMaxRewardRate() public {
+        vm.expectRevert(Staking.Staking__ExcessiveRewardRate.selector);
+        staking.setRewardRate(EXCESSIVE_REWARD_RATE);
     }
 }
