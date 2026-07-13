@@ -75,6 +75,18 @@ contract StakingTest is Test {
         assertEq(userInfo.pendingRewards, expectedReward);
     }
 
+    function testPendingRewardsNotCalculatedOnUsersFirstStake() public {
+        vm.prank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        vm.warp(block.timestamp + 1 days);
+
+        Staking.UserInfo memory userInfo = staking.getUserInfo(user);
+        uint256 userPendingRewards = userInfo.pendingRewards;
+
+        assertEq(userPendingRewards, 0);
+    }
+
     function testLastRewardTimeIsResetAfterStake() public {
         // first stake
         vm.prank(user);
