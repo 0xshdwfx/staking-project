@@ -413,4 +413,13 @@ contract StakingTest is Test {
             "calculateReward should return correct amount after 1 year has elapsed"
         );
     }
+
+    ////////////////////////
+    //// SetRewardRate ////
+    //////////////////////
+
+    function testSetRewardRateRevertsIfNewRateIsZero() public {
+        vm.expectRevert(Staking.Staking__ExcessiveRewardRate.selector);
+        staking.setRewardRate(0);
+    }
 }
