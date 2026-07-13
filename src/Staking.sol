@@ -57,7 +57,7 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     RewardToken public immutable REWARD_TOKEN;
 
     uint256 public totalStaked;
-    uint256 private dailyRewardRate = 1e17; // 10% annual reward rate - 0.1 * 1e18 = 1e17
+    uint256 public dailyRewardRate = 1e17; // 10% annual reward rate - 0.1 * 1e18 = 1e17
     uint256 private constant MAX_REWARD_RATE = 2e17; // 20% annual reward rate - 0.2 * 1e18 = 2e17
 
     mapping(address => UserInfo) public userInfo;
@@ -301,5 +301,9 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
 
     function getTotalStaked() external view returns (uint256) {
         return totalStaked;
+    }
+
+    function getDailyRewardRate() external view returns (uint256) {
+        return dailyRewardRate;
     }
 }
