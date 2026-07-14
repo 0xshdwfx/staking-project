@@ -440,6 +440,14 @@ contract StakingTest is Test {
         );
     }
 
+    function testCalculateRewardsIsCorrectForUserWhoHasStakedAmountOfZero() public {
+        vm.prank(user);
+
+        uint256 returnedReward = staking.calculateReward(user);
+
+        assertEq(returnedReward, 0, "calculateReward should return 0 for a user who has staked zero");
+    }
+
     ////////////////////////
     //// SetRewardRate ////
     //////////////////////
