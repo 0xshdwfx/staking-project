@@ -203,6 +203,19 @@ contract StakingTest is Test {
         staking.unstake(USER_UNSTAKE_AMOUNT);
     }
 
+    function testUnstakeWorksIfAmountIsExactlyEqualToUserStakeAmount() public {
+        vm.startPrank(user);
+        staking.stake(USER_STAKE_AMOUNT);
+
+        staking.unstake(USER_STAKE_AMOUNT);
+
+        Staking.UserInfo memory userInfo = staking.getUserInfo(user);
+
+        vm.stopPrank();
+
+        assertEq(userInfo.stakedAmount, 0);
+    }
+
     function testUsersStakedAmountDecreasesAfterUnstake() public {
         vm.startPrank(user);
         staking.stake(USER_STAKE_AMOUNT);
