@@ -3,8 +3,8 @@ pragma solidity ^0.8.26;
 
 import {Test} from "forge-std/Test.sol";
 import {console} from "forge-std/console.sol";
-import {Staking} from "src/Staking.sol";
-import {RewardToken} from "src/RewardToken.sol";
+import {Staking} from "../../src/Staking.sol";
+import {RewardToken} from "../../src/RewardToken.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
