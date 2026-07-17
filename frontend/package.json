@@ -1,33 +1,25 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "0.1.0",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.2.11",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "viem": "^2.55.2",
-    "wagmi": "^3.7.2"
+    "@tanstack/react-query": "^5.55.3",
+    "next": "^16.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "viem": "2.38.0",
+    "wagmi": "^2.19.3"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^24.13.2",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
-    "eslint": "^10.6.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.3",
-    "globals": "^17.7.0",
-    "typescript": "~6.0.2",
-    "typescript-eslint": "^8.62.0",
-    "vite": "^8.1.1"
+    "@types/node": "^24.12.2",
+    "@types/react": "^19.2.14",
+    "eslint-config-next": "^16.2.4",
+    "typescript": "5.9.3"
   }
 }
