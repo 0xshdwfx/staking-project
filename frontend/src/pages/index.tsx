@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { PendingRewards } from '../components/PendingRewards';
+import { StakedAmount } from '../components/StakedAmount';
 
 const Home: NextPage = () => {
 	return (
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
 				<h1>Staking Platform</h1>
 				<ConnectButton />
 				<PendingRewards />
+				<StakedAmount />
 			</main>
 		</div>
 	);

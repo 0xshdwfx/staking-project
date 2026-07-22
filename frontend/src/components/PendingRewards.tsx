@@ -6,14 +6,14 @@ export function PendingRewards() {
 
 	if (isLoading) return <div>Loading rewards...</div>;
 	if (error) return <div>Error loading rewards</div>;
-	if (!pendingRewards) return <div>0.00 Rewards</div>;
+	if (!pendingRewards) return <div>0.00 RWT</div>;
 
 	const formattedRewards = formatEther(pendingRewards);
 
 	return (
-		<div className='pending-rewards'>
+		<div>
 			<h3>Pending Rewards</h3>
-			<p>{parseFloat(formattedRewards).toFixed(4)} Tokens</p>
+			<p>{parseFloat(formattedRewards).toFixed(4)} RWT</p>
 		</div>
 	);
 }
