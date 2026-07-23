@@ -5,11 +5,12 @@ import {Test} from "forge-std/Test.sol";
 import {console} from "forge-std/console.sol";
 import {Staking} from "../../src/Staking.sol";
 import {RewardToken} from "../../src/RewardToken.sol";
+import {StakingToken} from "../../src/StakingToken.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
 contract StakingTest is Test {
-    ERC20Mock stakingToken;
+    StakingToken public stakingToken;
     RewardToken public rewardToken;
     Staking public staking;
 
@@ -34,15 +35,16 @@ contract StakingTest is Test {
 
     // set up
     function setUp() public {
-        stakingToken = new ERC20Mock();
+        stakingToken = new StakingToken(); //
         rewardToken = new RewardToken();
         staking = new Staking(address(stakingToken), address(rewardToken));
 
-        stakingToken.mint(user, STARTING_USER_BALANCE);
+        // ← Change: Transfer tokens from deployer to user (not mint)
+        stakingToken.transfer(user, STARTING_USER_BALANCE);
 
         vm.prank(user);
-        stakingToken.approve(address(staking), type(uint256).max); // type(uint256).max - testing purposes only
-        rewardToken.transferOwnership(address(staking)); // purely for testing purposes to allow Staking contract to call mint()
+        stakingToken.approve(address(staking), type(uint256).max);
+        rewardToken.transferOwnership(address(staking));
     }
 
     ///////////////////
