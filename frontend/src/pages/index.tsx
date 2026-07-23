@@ -4,6 +4,7 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { PendingRewards } from '../components/PendingRewards';
 import { StakedAmount } from '../components/StakedAmount';
+import { Stake } from '../components/Stake';
 
 const Home: NextPage = () => {
 	return (
@@ -19,6 +20,7 @@ const Home: NextPage = () => {
 				<ConnectButton />
 				<PendingRewards />
 				<StakedAmount />
+				<Stake />
 			</main>
 		</div>
 	);

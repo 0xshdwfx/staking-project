@@ -8,6 +8,7 @@ export function useStakedAmount() {
 		data: userInfo,
 		isLoading,
 		error,
+		refetch,
 	} = useReadContract({
 		address: CONTRACT_ADDRESSES.staking as `0x${string}`,
 		abi: STAKING_ABI,
@@ -15,6 +16,7 @@ export function useStakedAmount() {
 		args: [address],
 		query: {
 			enabled: !!address, // Only query if address exists
+			refetchInterval: 3000, // Refetch every 3 seconds
 		},
 	}) as any;
 
@@ -25,5 +27,6 @@ export function useStakedAmount() {
 		stakedAmount: stakedAmount as bigint | undefined,
 		isLoading,
 		error,
+		refetch,
 	};
 }

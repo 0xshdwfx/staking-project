@@ -8,6 +8,7 @@ export function usePendingRewards() {
 		data: pendingRewards,
 		isLoading,
 		error,
+		refetch,
 	} = useReadContract({
 		address: CONTRACT_ADDRESSES.staking as `0x${string}`,
 		abi: STAKING_ABI,
@@ -15,6 +16,7 @@ export function usePendingRewards() {
 		args: [address],
 		query: {
 			enabled: !!address, // Only query if address exists
+			refetchInterval: 3000, // Refetch every 3 seconds
 		},
 	});
 
@@ -22,5 +24,6 @@ export function usePendingRewards() {
 		pendingRewards: pendingRewards as bigint | undefined,
 		isLoading,
 		error,
+		refetch,
 	};
 }

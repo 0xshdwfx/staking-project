@@ -8,6 +8,7 @@ export function useStakingTokenBalance() {
 		data: balance,
 		isLoading,
 		error,
+		refetch,
 	} = useReadContract({
 		address: CONTRACT_ADDRESSES.stakingToken as `0x${string}`,
 		abi: STAKING_TOKEN_ABI,
@@ -15,6 +16,7 @@ export function useStakingTokenBalance() {
 		args: [address],
 		query: {
 			enabled: !!address, // Only query if address exists
+			refetchInterval: 3000, // Refetch every 3 seconds
 		},
 	});
 
@@ -22,5 +24,6 @@ export function useStakingTokenBalance() {
 		stakingTokenBalance: balance as bigint | undefined,
 		isLoading,
 		error,
+		refetch,
 	};
 }

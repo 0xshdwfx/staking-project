@@ -13,6 +13,7 @@ export function useStake() {
 			functionName: 'stake',
 			args: [amount],
 			account: address,
+			gas: 600_000n,
 		});
 	};
 
