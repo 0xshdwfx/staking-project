@@ -1,10 +1,19 @@
-import { useWriteContract, useAccount } from 'wagmi';
+import {
+	useWriteContract,
+	useAccount,
+	useWaitForTransactionReceipt,
+} from 'wagmi';
 import { CONTRACT_ADDRESSES, STAKING_ABI } from '../config/contracts';
 
 export function useStake() {
 	const { address } = useAccount();
 
-	const { writeContract, isPending, isSuccess, error } = useWriteContract();
+	const { writeContract, isPending, data: hash, error } = useWriteContract();
+
+	// This waits for the actual transaction receipt (mined on blockchain)
+	const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+		hash,
+	});
 
 	const stake = (amount: bigint) => {
 		writeContract({
@@ -13,13 +22,13 @@ export function useStake() {
 			functionName: 'stake',
 			args: [amount],
 			account: address,
-			gas: 600_000n,
 		});
 	};
 
 	return {
 		stake,
 		isPending,
+		isConfirming,
 		isSuccess,
 		error,
 	};

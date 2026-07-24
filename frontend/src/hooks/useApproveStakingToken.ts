@@ -14,7 +14,6 @@ export function useApproveStakingToken() {
 			functionName: 'approve',
 			args: [CONTRACT_ADDRESSES.staking, maxUint256],
 			account: address,
-			gas: 600_000n,
 		});
 	};
 
