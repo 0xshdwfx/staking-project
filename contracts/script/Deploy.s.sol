@@ -20,6 +20,9 @@ contract DeployScript is Script {
         // Deploy Staking with token addresses
         Staking staking = new Staking(address(stakingToken), address(rewardToken));
 
+        // Transfer RewardToken ownership to Staking contract (allows minting)
+        rewardToken.transferOwnership(address(staking));
+
         vm.stopBroadcast();
 
         // Log addresses for reference

@@ -1,8 +1,8 @@
 // Contract addresses from the Sepolia deployment
 export const CONTRACT_ADDRESSES = {
-	stakingToken: '0x25acb9c2b27d0aa9d31c7b8a167febb9eebe5227',
-	rewardToken: '0xf44990c151774f3acf6ef02178b8715d4abe02ad',
-	staking: '0x51b67fd7c068c0acf798b5255422f4ac47df9268',
+	stakingToken: '0x6eedc725eeb1b1b7c7e73fbe15105f7313847f12',
+	rewardToken: '0xdd0c654297cca2caf9e51ed29fb45226a5c9fd0b',
+	staking: '0x63f1dd0a26bc7cfc2f2aece13ffc94f39013d7ad',
 };
 
 // ABIs from the compiled contracts
