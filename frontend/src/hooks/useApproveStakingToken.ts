@@ -1,11 +1,19 @@
-import { useWriteContract, useAccount } from 'wagmi';
+import {
+	useWriteContract,
+	useAccount,
+	useWaitForTransactionReceipt,
+} from 'wagmi';
 import { CONTRACT_ADDRESSES, STAKING_TOKEN_ABI } from '../config/contracts';
 import { maxUint256 } from 'viem';
 
 export function useApproveStakingToken() {
 	const { address } = useAccount();
 
-	const { writeContract, isPending, error } = useWriteContract();
+	const { writeContract, isPending, data: hash, error } = useWriteContract();
+
+	const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+		hash,
+	});
 
 	const approve = () => {
 		writeContract({
@@ -20,6 +28,8 @@ export function useApproveStakingToken() {
 	return {
 		approve,
 		isPending,
+		isConfirming,
+		isSuccess,
 		error,
 	};
 }

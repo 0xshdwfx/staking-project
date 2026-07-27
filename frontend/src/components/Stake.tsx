@@ -23,12 +23,13 @@ export function Stake() {
 	const {
 		approve,
 		isPending: isApprovePending,
+		isConfirming: isApproveConfirming,
+		isSuccess: isApproveSuccess,
 		error: approveError,
 	} = useApproveStakingToken();
 	const { refetch: refetchStaked } = useStakedAmount();
 	const { refetch: refetchPending } = usePendingRewards();
 
-	// Check if approved (allowance > 0)
 	const isApproved = allowance && allowance > 0n;
 
 	const handleStake = () => {
@@ -42,7 +43,37 @@ export function Stake() {
 		? parseFloat(formatEther(stakingTokenBalance)).toFixed(4)
 		: '0.00';
 
-	// Show loading toast when pending
+	// Approval toasts
+	useEffect(() => {
+		if (isApprovePending) {
+			toast.loading('Confirm approval in MetaMask...');
+		}
+	}, [isApprovePending]);
+
+	useEffect(() => {
+		if (isApproveConfirming) {
+			toast.dismiss();
+			toast.loading('Confirming approval on blockchain...');
+		}
+	}, [isApproveConfirming]);
+
+	useEffect(() => {
+		if (isApproveSuccess) {
+			toast.dismiss();
+			toast.success('Approval successful! Now you can stake.');
+		}
+	}, [isApproveSuccess]);
+
+	useEffect(() => {
+		if (approveError) {
+			toast.dismiss();
+			toast.error(`Approval failed: ${approveError.message}`, {
+				duration: 10000,
+			});
+		}
+	}, [approveError]);
+
+	// Stake toasts
 	useEffect(() => {
 		if (isStakePending) {
 			toast.loading('Transaction pending... confirm in MetaMask');
@@ -56,7 +87,6 @@ export function Stake() {
 		}
 	}, [isStakeConfirming]);
 
-	// Show success only AFTER data actually updates (transaction mined)
 	useEffect(() => {
 		if (isStakeSuccess) {
 			toast.dismiss();
@@ -68,10 +98,9 @@ export function Stake() {
 		}
 	}, [isStakeSuccess, refetchBalance, refetchStaked, refetchPending]);
 
-	// Error handling
 	useEffect(() => {
 		if (stakeError) {
-			toast.dismiss(); // Dismiss the loading toast
+			toast.dismiss();
 			toast.error(`Stake failed: ${stakeError.message}`, {
 				duration: 10000,
 			});
@@ -81,9 +110,7 @@ export function Stake() {
 	return (
 		<div>
 			<h3>Stake STK</h3>
-
 			<p>Balance: {formattedBalance} STK</p>
-
 			<input
 				type='number'
 				placeholder='Amount to stake'
@@ -91,7 +118,6 @@ export function Stake() {
 				onChange={(e) => setAmount(e.target.value)}
 				disabled={isStakePending || isApprovePending || !isApproved}
 			/>
-
 			{!isApproved ? (
 				<button onClick={approve} disabled={isApprovePending}>
 					{isApprovePending ? 'Approving...' : 'Approve STK'}
