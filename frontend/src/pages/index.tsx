@@ -5,6 +5,7 @@ import styles from '../styles/Home.module.css';
 import { PendingRewards } from '../components/PendingRewards';
 import { StakedAmount } from '../components/StakedAmount';
 import { Stake } from '../components/Stake';
+import { ClaimRewards } from '../components/ClaimRewards';
 
 const Home: NextPage = () => {
 	return (
@@ -21,6 +22,7 @@ const Home: NextPage = () => {
 				<PendingRewards />
 				<StakedAmount />
 				<Stake />
+				<ClaimRewards />
 			</main>
 		</div>
 	);
