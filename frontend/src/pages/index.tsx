@@ -36,10 +36,10 @@ const Home: NextPage = () => {
 					{/* Stats Section */}
 					<div className='mb-12 grid gap-6 md:grid-cols-2'>
 						<div className='rounded-lg border border-slate-700 bg-slate-800 p-6 text-white'>
-							<PendingRewards />
+							<StakedAmount />
 						</div>
 						<div className='rounded-lg border border-slate-700 bg-slate-800 p-6 text-white'>
-							<StakedAmount />
+							<PendingRewards />
 						</div>
 					</div>
 

@@ -1,5 +1,6 @@
 import { useReadContract, useAccount } from 'wagmi';
 import { CONTRACT_ADDRESSES, STAKING_ABI } from '../config/contracts';
+import type { UserInfo } from '../types/contracts';
 
 export function useStakedAmount() {
 	const { address } = useAccount();
@@ -18,7 +19,12 @@ export function useStakedAmount() {
 			enabled: !!address, // Only query if address exists
 			refetchInterval: 3000, // Refetch every 3 seconds
 		},
-	}) as any;
+	}) as {
+		data?: UserInfo;
+		isLoading: boolean;
+		error: unknown;
+		refetch: Function;
+	};
 
 	// extract stakedAmount field from the returned struct
 	const stakedAmount = userInfo?.stakedAmount;
