@@ -109,21 +109,36 @@ export function Stake() {
 
 	return (
 		<div>
-			<h3>Stake STK</h3>
-			<p>Balance: {formattedBalance} STK</p>
+			<h3 className='text-lg font-semibold text-white mb-4'>Stake STK</h3>
+
+			<p className='text-sm text-slate-400 mb-4'>
+				Balance:{' '}
+				<span className='text-white font-semibold'>{formattedBalance} STK</span>
+			</p>
+
 			<input
 				type='number'
 				placeholder='Amount to stake'
 				value={amount}
 				onChange={(e) => setAmount(e.target.value)}
 				disabled={isStakePending || isApprovePending || !isApproved}
+				className='w-full mb-4 px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
 			/>
+
 			{!isApproved ? (
-				<button onClick={approve} disabled={isApprovePending}>
+				<button
+					onClick={approve}
+					disabled={isApprovePending}
+					className='w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+				>
 					{isApprovePending ? 'Approving...' : 'Approve STK'}
 				</button>
 			) : (
-				<button onClick={handleStake} disabled={isStakePending || !amount}>
+				<button
+					onClick={handleStake}
+					disabled={isStakePending || !amount}
+					className='w-full px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+				>
 					{isStakePending ? 'Staking...' : 'Stake'}
 				</button>
 			)}
