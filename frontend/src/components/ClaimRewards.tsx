@@ -15,7 +15,6 @@ export function ClaimRewards() {
 	} = useClaimRewards();
 
 	const { refetch: refetchRewardBalance } = useRewardTokenBalance();
-
 	const { pendingRewards, refetch: refetchPendingRewards } =
 		usePendingRewards();
 
@@ -33,6 +32,7 @@ export function ClaimRewards() {
 
 	useEffect(() => {
 		if (isRewardConfirming) {
+			toast.dismiss();
 			toast.loading('Waiting for blockchain confirmation...');
 		}
 	}, [isRewardConfirming]);
@@ -57,16 +57,22 @@ export function ClaimRewards() {
 
 	return (
 		<div>
-			<h3>Claim Reward</h3>
+			<h3 className='text-lg font-semibold text-white mb-6'>Claim Rewards</h3>
 
-			<h3>Pending Rewards</h3>
-			<p>{parseFloat(formattedRewards).toFixed(4)} RWT</p>
+			<div className='mb-6 p-4 rounded-lg bg-slate-700/50 border border-slate-600'>
+				<p className='text-sm text-slate-400 mb-2'>Pending Rewards</p>
+				<p className='text-3xl font-bold text-white'>
+					{parseFloat(formattedRewards).toFixed(4)}
+				</p>
+				<p className='text-sm text-slate-400 mt-1'>RWT</p>
+			</div>
 
 			<button
 				onClick={handleClaimReward}
 				disabled={!pendingRewards || isRewardPending || isRewardConfirming}
+				className='w-full px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
 			>
-				Claim Reward
+				{isRewardPending ? 'Claiming...' : 'Claim Reward'}
 			</button>
 		</div>
 	);

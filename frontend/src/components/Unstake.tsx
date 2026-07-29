@@ -16,7 +16,6 @@ export function Unstake() {
 		isSuccess: isUnstakeSuccess,
 	} = useUnstake();
 	const { refetch: refetchBalance } = useStakingTokenBalance();
-
 	const { refetch: refetchStaked } = useStakedAmount();
 	const { refetch: refetchPending } = usePendingRewards();
 
@@ -66,20 +65,29 @@ export function Unstake() {
 
 	return (
 		<div>
-			<h3>Unstake STK</h3>
-			<p>
-				STK available to unstake: {parseFloat(formattedStakedAmount).toFixed(4)}{' '}
-				STK
+			<h3 className='text-lg font-semibold text-white mb-4'>Unstake STK</h3>
+
+			<p className='text-sm text-slate-400 mb-4'>
+				Available:{' '}
+				<span className='text-white font-semibold'>
+					{parseFloat(formattedStakedAmount).toFixed(4)} STK
+				</span>
 			</p>
+
 			<input
 				type='number'
 				placeholder='Amount to unstake'
 				value={amount}
 				onChange={(e) => setAmount(e.target.value)}
-				disabled={isUnstakePending}
+				disabled={isUnstakePending || isUnstakeConfirming}
+				className='w-full mb-4 px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
 			/>
 
-			<button onClick={handleUnstake} disabled={isUnstakePending || !amount}>
+			<button
+				onClick={handleUnstake}
+				disabled={isUnstakePending || isUnstakeConfirming || !amount}
+				className='w-full px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+			>
 				{isUnstakePending ? 'Unstaking...' : 'Unstake'}
 			</button>
 		</div>
