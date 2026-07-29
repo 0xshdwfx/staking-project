@@ -6,6 +6,7 @@ import { PendingRewards } from '../components/PendingRewards';
 import { StakedAmount } from '../components/StakedAmount';
 import { Stake } from '../components/Stake';
 import { ClaimRewards } from '../components/ClaimRewards';
+import { Unstake } from '../components/Unstake';
 
 const Home: NextPage = () => {
 	return (
@@ -23,6 +24,7 @@ const Home: NextPage = () => {
 				<StakedAmount />
 				<Stake />
 				<ClaimRewards />
+				<Unstake />
 			</main>
 		</div>
 	);
