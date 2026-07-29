@@ -6,6 +6,7 @@ import { StakedAmount } from '../components/StakedAmount';
 import { Stake } from '../components/Stake';
 import { ClaimRewards } from '../components/ClaimRewards';
 import { Unstake } from '../components/Unstake';
+import { BiSolidCoin } from 'react-icons/bi';
 
 const Home: NextPage = () => {
 	return (
@@ -20,7 +21,12 @@ const Home: NextPage = () => {
 				{/* Header */}
 				<header className='border-b border-slate-700 bg-slate-800/50 backdrop-blur'>
 					<div className='mx-auto max-w-6xl px-6 py-6 flex items-center justify-between'>
-						<h1 className='text-4xl font-bold text-white'>Staking Platform</h1>
+						<div className='flex items-center gap-3'>
+							<BiSolidCoin className='text-4xl text-yellow-500' />
+							<h1 className='text-4xl font-bold text-white'>
+								Staking Platform
+							</h1>
+						</div>
 						<ConnectButton />
 					</div>
 				</header>
