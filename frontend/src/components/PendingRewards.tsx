@@ -1,4 +1,5 @@
 import { usePendingRewards } from '../hooks/usePendingRewards';
+import { useRewardTokenSymbol } from '../hooks/useRewardTokenSymbol';
 import { formatEther } from 'viem';
 
 export function PendingRewards() {
@@ -7,6 +8,8 @@ export function PendingRewards() {
 	if (isLoading)
 		return <div className='text-slate-400'>Loading rewards...</div>;
 	if (error) return <div className='text-red-400'>Error loading rewards</div>;
+
+	const { symbol: rewardTokenSymbol } = useRewardTokenSymbol();
 
 	const formattedRewards = pendingRewards
 		? formatEther(pendingRewards)
@@ -19,7 +22,7 @@ export function PendingRewards() {
 				Pending Rewards
 			</h3>
 			<p className='text-4xl font-bold text-white mb-2'>{displayAmount}</p>
-			<p className='text-sm text-slate-400'>RWT</p>
+			<p className='text-sm text-slate-400'>{rewardTokenSymbol}</p>
 		</div>
 	);
 }
