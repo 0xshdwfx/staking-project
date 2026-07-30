@@ -6,6 +6,7 @@ import { useStakingTokenAllowance } from '../hooks/useStakingTokenAllowance';
 import { useApproveStakingToken } from '../hooks/useApproveStakingToken';
 import { useStakedAmount } from '../hooks/useStakedAmount';
 import { usePendingRewards } from '../hooks/usePendingRewards';
+import { useStakingTokenSymbol } from '../hooks/useStakingTokenSymbol';
 import { toast } from 'sonner';
 
 export function Stake() {
@@ -29,6 +30,7 @@ export function Stake() {
 	} = useApproveStakingToken();
 	const { refetch: refetchStaked } = useStakedAmount();
 	const { refetch: refetchPending } = usePendingRewards();
+	const { symbol: stakingTokenSymbol } = useStakingTokenSymbol();
 
 	const isApproved = allowance && allowance > 0n;
 
@@ -109,11 +111,15 @@ export function Stake() {
 
 	return (
 		<div>
-			<h3 className='text-lg font-semibold text-white mb-4'>Stake STK</h3>
+			<h3 className='text-lg font-semibold text-white mb-4'>
+				Stake {stakingTokenSymbol}
+			</h3>
 
 			<p className='text-sm text-slate-400 mb-4'>
 				Balance:{' '}
-				<span className='text-white font-semibold'>{formattedBalance} STK</span>
+				<span className='text-white font-semibold'>
+					{formattedBalance} {stakingTokenSymbol}
+				</span>
 			</p>
 
 			<input
@@ -131,7 +137,7 @@ export function Stake() {
 					disabled={isApprovePending}
 					className='w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
 				>
-					{isApprovePending ? 'Approving...' : 'Approve STK'}
+					{isApprovePending ? 'Approving...' : `Approve ${stakingTokenSymbol}`}
 				</button>
 			) : (
 				<button
