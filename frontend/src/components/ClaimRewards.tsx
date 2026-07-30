@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useClaimRewards } from '../hooks/useClaimRewards';
 import { usePendingRewards } from '../hooks/usePendingRewards';
 import { useRewardTokenBalance } from '../hooks/useRewardTokenBalance';
+import { useRewardTokenSymbol } from '../hooks/useRewardTokenSymbol';
 import { toast } from 'sonner';
 import { formatEther } from 'viem';
 
@@ -17,6 +18,7 @@ export function ClaimRewards() {
 	const { refetch: refetchRewardBalance } = useRewardTokenBalance();
 	const { pendingRewards, refetch: refetchPendingRewards } =
 		usePendingRewards();
+	const { symbol: rewardTokenSymbol } = useRewardTokenSymbol();
 
 	const handleClaimReward = () => {
 		claimReward();
@@ -64,7 +66,7 @@ export function ClaimRewards() {
 				<p className='text-3xl font-bold text-white'>
 					{parseFloat(formattedRewards).toFixed(4)}
 				</p>
-				<p className='text-sm text-slate-400 mt-1'>RWT</p>
+				<p className='text-sm text-slate-400 mt-1'>{rewardTokenSymbol}</p>
 			</div>
 
 			<button
