@@ -15,10 +15,15 @@ export function usePendingRewards() {
 		functionName: 'pendingRewards',
 		args: [address],
 		query: {
-			enabled: !!address, // Only query if address exists
-			refetchInterval: 3000, // Refetch every 3 seconds
+			enabled: !!address,
+			refetchInterval: 3000,
 		},
-	});
+	}) as {
+		data?: bigint;
+		isLoading: boolean;
+		error: unknown;
+		refetch: Function;
+	};
 
 	return {
 		pendingRewards: pendingRewards as bigint | undefined,
