@@ -11,11 +11,14 @@ export function useStakingTokenAllowance() {
 		args: [address, CONTRACT_ADDRESSES.staking],
 		query: {
 			enabled: !!address,
-			refetchInterval: 1000, // Refetch every 1 second (was 2000)
-			refetchOnMount: true, // Always refetch when component mounts
-			refetchOnWindowFocus: true, // Refetch when window regains focus
+			refetchInterval: 1000,
+			refetchOnMount: true,
+			refetchOnWindowFocus: true,
 		},
-	}) as any;
+	}) as {
+		data?: bigint;
+		refetch: Function;
+	};
 
 	return {
 		allowance: allowance as bigint | undefined,
