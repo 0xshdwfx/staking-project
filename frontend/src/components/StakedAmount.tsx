@@ -4,13 +4,12 @@ import { formatEther } from 'viem';
 
 export function StakedAmount() {
 	const { stakedAmount, isLoading, error } = useStakedAmount();
+	const { symbol: stakingTokenSymbol } = useStakingTokenSymbol();
 
 	if (isLoading)
 		return <div className='text-slate-400'>Loading staked amount...</div>;
 	if (error)
 		return <div className='text-red-400'>Error loading staked amount</div>;
-
-	const { symbol: stakingTokenSymbol } = useStakingTokenSymbol();
 
 	const formattedStakedAmount = stakedAmount
 		? formatEther(stakedAmount)

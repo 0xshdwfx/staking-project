@@ -4,12 +4,11 @@ import { formatEther } from 'viem';
 
 export function PendingRewards() {
 	const { pendingRewards, isLoading, error } = usePendingRewards();
+	const { symbol: rewardTokenSymbol } = useRewardTokenSymbol();
 
 	if (isLoading)
 		return <div className='text-slate-400'>Loading rewards...</div>;
 	if (error) return <div className='text-red-400'>Error loading rewards</div>;
-
-	const { symbol: rewardTokenSymbol } = useRewardTokenSymbol();
 
 	const formattedRewards = pendingRewards
 		? formatEther(pendingRewards)

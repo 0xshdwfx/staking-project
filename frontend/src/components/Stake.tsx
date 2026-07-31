@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { parseEther, formatEther } from 'viem';
 import { useStake } from '../hooks/useStake';
 import { useStakingTokenBalance } from '../hooks/useStakingTokenBalance';
@@ -52,7 +52,7 @@ export function Stake() {
 		isConfirming: isApproveConfirming,
 		isSuccess: isApproveSuccess,
 		error: approveError,
-		pendingMessage: 'Confirm approval in MetaMask...',
+		pendingMessage: 'Confirm approval in Wallet...',
 		confirmingMessage: 'Confirming approval on blockchain...',
 		successMessage: 'Approval successful! Now you can stake.',
 	});
@@ -63,7 +63,7 @@ export function Stake() {
 		isConfirming: isStakeConfirming,
 		isSuccess: isStakeSuccess,
 		error: stakeError,
-		pendingMessage: 'Transaction pending... confirm in MetaMask',
+		pendingMessage: 'Transaction pending... confirm in Wallet',
 		confirmingMessage: 'Waiting for blockchain confirmation...',
 		successMessage: 'Stake successful!',
 	});
