@@ -3,7 +3,7 @@ import { useClaimRewards } from '../hooks/useClaimRewards';
 import { usePendingRewards } from '../hooks/usePendingRewards';
 import { useRewardTokenBalance } from '../hooks/useRewardTokenBalance';
 import { useRewardTokenSymbol } from '../hooks/useRewardTokenSymbol';
-import { toast } from 'sonner';
+import { useTransactionToast } from '../hooks/useTransactionToast';
 import { formatEther } from 'viem';
 
 export function ClaimRewards() {
@@ -26,36 +26,24 @@ export function ClaimRewards() {
 
 	const formattedRewards = formatEther(pendingRewards ?? 0n);
 
-	useEffect(() => {
-		if (isRewardPending) {
-			toast.loading('Transaction pending... confirm in MetaMask');
-		}
-	}, [isRewardPending]);
+	// Toast notifications
+	useTransactionToast({
+		isPending: isRewardPending,
+		isConfirming: isRewardConfirming,
+		isSuccess: isRewardSuccess,
+		error: rewardError,
+		pendingMessage: 'Transaction pending... confirm in Wallet',
+		confirmingMessage: 'Waiting for blockchain confirmation...',
+		successMessage: 'Reward claimed successfully!',
+	});
 
-	useEffect(() => {
-		if (isRewardConfirming) {
-			toast.dismiss();
-			toast.loading('Waiting for blockchain confirmation...');
-		}
-	}, [isRewardConfirming]);
-
+	// Refetch data after successful claim
 	useEffect(() => {
 		if (isRewardSuccess) {
-			toast.dismiss();
-			toast.success('Reward claimed successfully!');
 			refetchPendingRewards();
 			refetchRewardBalance();
 		}
 	}, [isRewardSuccess, refetchPendingRewards, refetchRewardBalance]);
-
-	useEffect(() => {
-		if (rewardError) {
-			toast.dismiss();
-			toast.error(`Claim failed: ${rewardError.message}`, {
-				duration: 10000,
-			});
-		}
-	}, [rewardError]);
 
 	return (
 		<div>
