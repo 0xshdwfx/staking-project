@@ -7,6 +7,7 @@ import { useApproveStakingToken } from '../hooks/useApproveStakingToken';
 import { useStakedAmount } from '../hooks/useStakedAmount';
 import { usePendingRewards } from '../hooks/usePendingRewards';
 import { useStakingTokenSymbol } from '../hooks/useStakingTokenSymbol';
+import { useTransactionToast } from '../hooks/useTransactionToast';
 import { toast } from 'sonner';
 
 export function Stake() {
@@ -46,68 +47,26 @@ export function Stake() {
 		: '0.00';
 
 	// Approval toasts
-	useEffect(() => {
-		if (isApprovePending) {
-			toast.loading('Confirm approval in MetaMask...');
-		}
-	}, [isApprovePending]);
-
-	useEffect(() => {
-		if (isApproveConfirming) {
-			toast.dismiss();
-			toast.loading('Confirming approval on blockchain...');
-		}
-	}, [isApproveConfirming]);
-
-	useEffect(() => {
-		if (isApproveSuccess) {
-			toast.dismiss();
-			toast.success('Approval successful! Now you can stake.');
-		}
-	}, [isApproveSuccess]);
-
-	useEffect(() => {
-		if (approveError) {
-			toast.dismiss();
-			toast.error(`Approval failed: ${approveError.message}`, {
-				duration: 10000,
-			});
-		}
-	}, [approveError]);
+	useTransactionToast({
+		isPending: isApprovePending,
+		isConfirming: isApproveConfirming,
+		isSuccess: isApproveSuccess,
+		error: approveError,
+		pendingMessage: 'Confirm approval in MetaMask...',
+		confirmingMessage: 'Confirming approval on blockchain...',
+		successMessage: 'Approval successful! Now you can stake.',
+	});
 
 	// Stake toasts
-	useEffect(() => {
-		if (isStakePending) {
-			toast.loading('Transaction pending... confirm in MetaMask');
-		}
-	}, [isStakePending]);
-
-	useEffect(() => {
-		if (isStakeConfirming) {
-			toast.dismiss();
-			toast.loading('Waiting for blockchain confirmation...');
-		}
-	}, [isStakeConfirming]);
-
-	useEffect(() => {
-		if (isStakeSuccess) {
-			toast.dismiss();
-			toast.success('Stake successful!');
-			refetchBalance();
-			refetchStaked();
-			refetchPending();
-			setAmount('');
-		}
-	}, [isStakeSuccess, refetchBalance, refetchStaked, refetchPending]);
-
-	useEffect(() => {
-		if (stakeError) {
-			toast.dismiss();
-			toast.error(`Stake failed: ${stakeError.message}`, {
-				duration: 10000,
-			});
-		}
-	}, [stakeError]);
+	useTransactionToast({
+		isPending: isStakePending,
+		isConfirming: isStakeConfirming,
+		isSuccess: isStakeSuccess,
+		error: stakeError,
+		pendingMessage: 'Transaction pending... confirm in MetaMask',
+		confirmingMessage: 'Waiting for blockchain confirmation...',
+		successMessage: 'Stake successful!',
+	});
 
 	return (
 		<div>
