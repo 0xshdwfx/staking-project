@@ -14,17 +14,37 @@ interface TransactionToastConfig {
 function parseErrorMessage(error: unknown): string {
 	if (!error) return 'An error occurred';
 
+	const errorObj = error as any;
+
+	// Check Viem error properties
+	if (errorObj.shortMessage) {
+		if (errorObj.shortMessage.includes('reverted')) {
+			// Extract args to see what was passed
+			if (errorObj.args && errorObj.args[0] === 0n) {
+				return 'Invalid stake amount - must be greater than 0';
+			}
+		}
+	}
+
+	// Check details property
+	if (errorObj.details && errorObj.details.includes('InvalidStakeAmount')) {
+		return 'Invalid stake amount - must be greater than 0';
+	}
+
+	// Check function name
+	if (
+		errorObj.functionName === 'stake' &&
+		errorObj.args &&
+		errorObj.args[0] === 0n
+	) {
+		return 'Invalid stake amount - must be greater than 0';
+	}
+
 	const errorStr = String(error);
 
-	if (errorStr.includes('InvalidStakeAmount')) return 'Invalid stake amount';
-	if (errorStr.includes('AmountToUnstakeExceedsStakedAmount'))
-		return 'Insufficient staked amount';
-	if (errorStr.includes('RewardAmountIsZero'))
-		return 'No pending rewards to claim';
-	if (errorStr.includes('InsufficientAllowance'))
-		return 'Insufficient token allowance';
-	if (errorStr.includes('InsufficientBalance'))
-		return 'Insufficient token balance';
+	// Original checks...
+	if (errorStr.includes('InvalidStakeAmount'))
+		return 'Invalid stake amount - must be greater than 0';
 	if (errorStr.includes('gas limit too high'))
 		return 'Transaction gas limit exceeded';
 	if (errorStr.includes('User rejected')) return 'Transaction rejected';
