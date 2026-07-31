@@ -5,7 +5,7 @@ import { usePendingRewards } from '../hooks/usePendingRewards';
 import { formatEther, parseEther } from 'viem';
 import { useStakingTokenBalance } from '../hooks/useStakingTokenBalance';
 import { useStakingTokenSymbol } from '../hooks/useStakingTokenSymbol';
-import { toast } from 'sonner';
+import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function Unstake() {
 	const [amount, setAmount] = useState('');
@@ -31,39 +31,26 @@ export function Unstake() {
 		setAmount('');
 	};
 
-	// Unstake toasts
-	useEffect(() => {
-		if (isUnstakePending) {
-			toast.loading('Transaction pending... confirm in MetaMask');
-		}
-	}, [isUnstakePending]);
+	// Toast notifications
+	useTransactionToast({
+		isPending: isUnstakePending,
+		isConfirming: isUnstakeConfirming,
+		isSuccess: isUnstakeSuccess,
+		error: unstakeError,
+		pendingMessage: 'Transaction pending... confirm in Wallet',
+		confirmingMessage: 'Waiting for blockchain confirmation...',
+		successMessage: 'Unstake successful!',
+	});
 
-	useEffect(() => {
-		if (isUnstakeConfirming) {
-			toast.dismiss();
-			toast.loading('Waiting for blockchain confirmation...');
-		}
-	}, [isUnstakeConfirming]);
-
+	// Refetch data after successful unstake
 	useEffect(() => {
 		if (isUnstakeSuccess) {
-			toast.dismiss();
-			toast.success('Unstake successful!');
 			refetchBalance();
 			refetchStaked();
 			refetchPending();
 			setAmount('');
 		}
 	}, [isUnstakeSuccess, refetchBalance, refetchStaked, refetchPending]);
-
-	useEffect(() => {
-		if (unstakeError) {
-			toast.dismiss();
-			toast.error(`Unstake failed: ${unstakeError.message}`, {
-				duration: 10000,
-			});
-		}
-	}, [unstakeError]);
 
 	return (
 		<div>

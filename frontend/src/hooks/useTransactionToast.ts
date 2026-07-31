@@ -15,36 +15,35 @@ function parseErrorMessage(error: unknown): string {
 	if (!error) return 'An error occurred';
 
 	const errorObj = error as any;
+	const functionName = errorObj.functionName;
+	const args = errorObj.args?.[0];
 
-	// Check Viem error properties
-	if (errorObj.shortMessage) {
-		if (errorObj.shortMessage.includes('reverted')) {
-			// Extract args to see what was passed
-			if (errorObj.args && errorObj.args[0] === 0n) {
-				return 'Invalid stake amount - must be greater than 0';
-			}
-		}
+	// Generic check: if amount is 0
+	if (args === 0n) {
+		if (functionName === 'stake')
+			return 'Invalid stake amount - must be greater than 0';
+		if (functionName === 'unstake')
+			return 'Unstake amount must be greater than 0';
+		if (functionName === 'claimReward') return 'No pending rewards to claim';
 	}
 
-	// Check details property
-	if (errorObj.details && errorObj.details.includes('InvalidStakeAmount')) {
-		return 'Invalid stake amount - must be greater than 0';
-	}
-
-	// Check function name
+	// Generic error checks
 	if (
-		errorObj.functionName === 'stake' &&
-		errorObj.args &&
-		errorObj.args[0] === 0n
-	) {
-		return 'Invalid stake amount - must be greater than 0';
-	}
+		errorObj.details?.includes('InvalidStakeAmount') ||
+		errorObj.shortMessage?.includes('InvalidStakeAmount')
+	)
+		return 'Invalid stake amount';
+	if (errorObj.details?.includes('AmountToUnstakeExceedsStakedAmount'))
+		return 'Cannot unstake more than your staked amount';
+	if (errorObj.details?.includes('RewardAmountIsZero'))
+		return 'No pending rewards to claim';
+	if (errorObj.details?.includes('InsufficientAllowance'))
+		return 'Insufficient token allowance';
+	if (errorObj.details?.includes('InsufficientBalance'))
+		return 'Insufficient token balance';
 
 	const errorStr = String(error);
 
-	// Original checks...
-	if (errorStr.includes('InvalidStakeAmount'))
-		return 'Invalid stake amount - must be greater than 0';
 	if (errorStr.includes('gas limit too high'))
 		return 'Transaction gas limit exceeded';
 	if (errorStr.includes('User rejected')) return 'Transaction rejected';

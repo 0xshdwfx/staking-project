@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { parseEther, formatEther } from 'viem';
 import { useStake } from '../hooks/useStake';
 import { useStakingTokenBalance } from '../hooks/useStakingTokenBalance';
@@ -8,7 +8,6 @@ import { useStakedAmount } from '../hooks/useStakedAmount';
 import { usePendingRewards } from '../hooks/usePendingRewards';
 import { useStakingTokenSymbol } from '../hooks/useStakingTokenSymbol';
 import { useTransactionToast } from '../hooks/useTransactionToast';
-import { toast } from 'sonner';
 
 export function Stake() {
 	const [amount, setAmount] = useState('');
@@ -45,6 +44,16 @@ export function Stake() {
 	const formattedBalance = stakingTokenBalance
 		? parseFloat(formatEther(stakingTokenBalance)).toFixed(4)
 		: '0.00';
+
+	// Refetch data after successful stake
+	useEffect(() => {
+		if (isStakeSuccess) {
+			refetchBalance();
+			refetchStaked();
+			refetchPending();
+			setAmount('');
+		}
+	}, [isStakeSuccess, refetchBalance, refetchStaked, refetchPending]);
 
 	// Approval toasts
 	useTransactionToast({
