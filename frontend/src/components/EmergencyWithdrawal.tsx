@@ -35,7 +35,7 @@ export function EmergencyWithdrawal() {
 		isConfirming: isWithdrawalConfirming,
 		isSuccess: isWithdrawalSuccess,
 		error: withdrawalError,
-		pendingMessage: 'Transaction pending... confirm in MetaMask',
+		pendingMessage: 'Transaction pending... confirm in Wallet',
 		confirmingMessage: 'Waiting for blockchain confirmation...',
 		successMessage:
 			'Emergency withdrawal successful! All pending rewards forfeited.',

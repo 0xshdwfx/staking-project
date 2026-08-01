@@ -24,6 +24,8 @@ function parseErrorMessage(error: unknown): string {
 			return 'Invalid stake amount - must be greater than 0';
 		if (functionName === 'unstake')
 			return 'Unstake amount must be greater than 0';
+		if (functionName === 'emergencyWithdrawal')
+			return 'Withdrawal amount must be greater than 0';
 		if (functionName === 'claimReward') return 'No pending rewards to claim';
 	}
 
@@ -35,6 +37,8 @@ function parseErrorMessage(error: unknown): string {
 		return 'Invalid stake amount';
 	if (errorObj.details?.includes('AmountToUnstakeExceedsStakedAmount'))
 		return 'Cannot unstake more than your staked amount';
+	if (errorObj.details?.includes('AmountToWithdrawExceedsStakedAmount'))
+		return 'Cannot withdraw more than your staked amount';
 	if (errorObj.details?.includes('RewardAmountIsZero'))
 		return 'No pending rewards to claim';
 	if (errorObj.details?.includes('InsufficientAllowance'))
