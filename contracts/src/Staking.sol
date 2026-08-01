@@ -168,6 +168,9 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     function claimReward() external nonReentrant {
         UserInfo storage user = userInfo[msg.sender];
 
+        // update the stored state before claiming
+        user.pendingRewards += calculateReward(msg.sender);
+
         // validate to ensure reward amount is not 0
         uint256 rewardAmount = user.pendingRewards;
         if (rewardAmount == 0) revert Staking__RewardAmountIsZero();
