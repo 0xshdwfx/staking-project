@@ -60,7 +60,7 @@ export function ClaimRewards() {
 			<button
 				onClick={handleClaimReward}
 				disabled={!pendingRewards || isRewardPending || isRewardConfirming}
-				className='w-full px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+				className='w-full px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer'
 			>
 				{isRewardPending ? 'Claiming...' : 'Claim Reward'}
 			</button>

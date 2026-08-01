@@ -106,7 +106,7 @@ export function Stake() {
 				<button
 					onClick={approve}
 					disabled={isApprovePending || !address}
-					className='w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+					className='w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer'
 				>
 					{isApprovePending ? 'Approving...' : `Approve ${stakingTokenSymbol}`}
 				</button>
@@ -114,7 +114,7 @@ export function Stake() {
 				<button
 					onClick={handleStake}
 					disabled={isStakePending || !amount}
-					className='w-full px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+					className='w-full px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer'
 				>
 					{isStakePending ? 'Staking...' : 'Stake'}
 				</button>

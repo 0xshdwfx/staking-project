@@ -80,7 +80,7 @@ export function Unstake() {
 			<button
 				onClick={handleUnstake}
 				disabled={isUnstakePending || isUnstakeConfirming || !amount}
-				className='w-full px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+				className='w-full px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer'
 			>
 				{isUnstakePending ? 'Unstaking...' : 'Unstake'}
 			</button>

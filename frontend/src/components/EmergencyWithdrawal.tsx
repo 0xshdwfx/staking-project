@@ -83,7 +83,7 @@ export function EmergencyWithdrawal() {
 			<button
 				onClick={handleEmergencyWithdrawal}
 				disabled={isWithdrawalPending || isWithdrawalConfirming || !amount}
-				className='w-full px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
+				className='w-full px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer'
 			>
 				{isWithdrawalPending ? 'Withdrawing...' : 'Emergency Withdrawal'}
 			</button>
