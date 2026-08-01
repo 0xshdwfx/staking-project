@@ -6,6 +6,7 @@ import { StakedAmount } from '../components/StakedAmount';
 import { Stake } from '../components/Stake';
 import { ClaimRewards } from '../components/ClaimRewards';
 import { Unstake } from '../components/Unstake';
+import { EmergencyWithdrawal } from '../components/EmergencyWithdrawal';
 import { BiSolidCoin } from 'react-icons/bi';
 
 const Home: NextPage = () => {
@@ -53,6 +54,12 @@ const Home: NextPage = () => {
 						</div>
 						<div className='rounded-lg border border-slate-700 bg-slate-800 p-6 text-white'>
 							<ClaimRewards />
+						</div>
+					</div>
+
+					<div className='grid gap-6 md:grid-cols-1 mt-6'>
+						<div className='rounded-lg border border-red-700 bg-red-900/20 p-6 text-white'>
+							<EmergencyWithdrawal />
 						</div>
 					</div>
 				</main>
