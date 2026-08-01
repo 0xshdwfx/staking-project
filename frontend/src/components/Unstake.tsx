@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
+import { formatEther, parseEther } from 'viem';
+import { useAccount } from 'wagmi';
 import { useUnstake } from '../hooks/useUnstake';
 import { useStakedAmount } from '../hooks/useStakedAmount';
 import { usePendingRewards } from '../hooks/usePendingRewards';
-import { formatEther, parseEther } from 'viem';
 import { useStakingTokenBalance } from '../hooks/useStakingTokenBalance';
 import { useStakingTokenSymbol } from '../hooks/useStakingTokenSymbol';
 import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function Unstake() {
+	const { address } = useAccount();
+
 	const [amount, setAmount] = useState('');
 	const {
 		unstake,
@@ -70,7 +73,7 @@ export function Unstake() {
 				placeholder='Amount to unstake'
 				value={amount}
 				onChange={(e) => setAmount(e.target.value)}
-				disabled={isUnstakePending || isUnstakeConfirming}
+				disabled={isUnstakePending || isUnstakeConfirming || !address}
 				className='w-full mb-4 px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
 			/>
 

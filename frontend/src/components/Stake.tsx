@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { parseEther, formatEther } from 'viem';
+import { useAccount } from 'wagmi';
 import { useStake } from '../hooks/useStake';
 import { useStakingTokenBalance } from '../hooks/useStakingTokenBalance';
 import { useStakingTokenAllowance } from '../hooks/useStakingTokenAllowance';
@@ -10,6 +11,8 @@ import { useStakingTokenSymbol } from '../hooks/useStakingTokenSymbol';
 import { useTransactionToast } from '../hooks/useTransactionToast';
 
 export function Stake() {
+	const { address } = useAccount();
+
 	const [amount, setAmount] = useState('');
 	const {
 		stake,
@@ -102,7 +105,7 @@ export function Stake() {
 			{!isApproved ? (
 				<button
 					onClick={approve}
-					disabled={isApprovePending}
+					disabled={isApprovePending || !address}
 					className='w-full px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition'
 				>
 					{isApprovePending ? 'Approving...' : `Approve ${stakingTokenSymbol}`}

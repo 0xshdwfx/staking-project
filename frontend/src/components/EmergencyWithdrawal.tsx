@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
+import { formatEther, parseEther } from 'viem';
+import { useAccount } from 'wagmi';
 import { useEmergencyWithdrawal } from '../hooks/useEmergencyWithdrawal';
 import { useStakedAmount } from '../hooks/useStakedAmount';
 import { useStakingTokenBalance } from '../hooks/useStakingTokenBalance';
 import { useStakingTokenSymbol } from '../hooks/useStakingTokenSymbol';
 import { useTransactionToast } from '../hooks/useTransactionToast';
-import { formatEther, parseEther } from 'viem';
 
 export function EmergencyWithdrawal() {
+	const { address } = useAccount();
+
 	const [amount, setAmount] = useState('');
 	const {
 		emergencyWithdrawal,
@@ -73,7 +76,7 @@ export function EmergencyWithdrawal() {
 				placeholder='Amount to withdraw'
 				value={amount}
 				onChange={(e) => setAmount(e.target.value)}
-				disabled={isWithdrawalPending || isWithdrawalConfirming}
+				disabled={isWithdrawalPending || isWithdrawalConfirming || !address}
 				className='w-full mb-4 px-4 py-2 rounded-lg bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
 			/>
 
