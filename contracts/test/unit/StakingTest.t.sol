@@ -24,6 +24,9 @@ contract StakingTest is Test {
     uint256 public constant EXCESSIVE_REWARD_RATE = 3e17;
     uint256 public constant NEW_REWARD_RATE = 2e17;
 
+    // errors
+    error StakingTest__TransferFailed();
+
     // events
     event StakeAdded(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
@@ -38,7 +41,8 @@ contract StakingTest is Test {
         staking = new Staking(address(stakingToken), address(rewardToken));
 
         // transfer tokens from deployer to user
-        stakingToken.transfer(user, STARTING_USER_BALANCE);
+        bool success = stakingToken.transfer(user, STARTING_USER_BALANCE);
+        if (!success) revert StakingTest__TransferFailed();
 
         vm.prank(user);
         stakingToken.approve(address(staking), type(uint256).max);
