@@ -20,6 +20,29 @@ import {RewardToken} from "./RewardToken.sol";
  */
 
 contract Staking is Ownable, ReentrancyGuard, Pausable {
+    ////////////////
+    //// Types ////
+    ///////////////
+
+    struct UserInfo {
+        uint256 stakedAmount;
+        uint256 lastRewardTime;
+        uint256 pendingRewards;
+    }
+
+    ////////////////////////
+    /// State Variables ///
+    //////////////////////
+
+    IERC20 public immutable STAKING_TOKEN;
+    RewardToken public immutable REWARD_TOKEN;
+
+    uint256 public totalStaked;
+    uint256 public dailyRewardRate = 1e17; // 10% annual reward rate - 0.1 * 1e18 = 1e17
+    uint256 private constant MAX_REWARD_RATE = 2e17; // 20% annual reward rate - 0.2 * 1e18 = 2e17
+
+    mapping(address => UserInfo) public userInfo;
+
     /////////////////
     /// Events //////
     /////////////////
@@ -42,25 +65,6 @@ contract Staking is Ownable, ReentrancyGuard, Pausable {
     error Staking__RewardAmountIsZero();
     error Staking__ExcessiveRewardRate();
     error Staking__AmountToWithdrawExceedsStakedAmount();
-
-    ////////////////////////
-    /// State Variables ///
-    //////////////////////
-
-    struct UserInfo {
-        uint256 stakedAmount;
-        uint256 lastRewardTime;
-        uint256 pendingRewards;
-    }
-
-    IERC20 public immutable STAKING_TOKEN;
-    RewardToken public immutable REWARD_TOKEN;
-
-    uint256 public totalStaked;
-    uint256 public dailyRewardRate = 1e17; // 10% annual reward rate - 0.1 * 1e18 = 1e17
-    uint256 private constant MAX_REWARD_RATE = 2e17; // 20% annual reward rate - 0.2 * 1e18 = 2e17
-
-    mapping(address => UserInfo) public userInfo;
 
     ///////////////////
     /// Constructor ///
